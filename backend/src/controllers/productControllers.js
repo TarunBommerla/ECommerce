@@ -1,5 +1,19 @@
-export const getAllProducts = (req, res) => {
+import { Product } from "../models/productModel.js";
+
+//Creating Products
+export const createProducts = async (req, res) => {
+  const product = await Product.create(req.body);
+  res.status(201).json({
+    success: true,
+    product,
+  });
+  console.log(req.body);
+};
+
+export const getAllProducts = async (req, res) => {
+  const products = await Product.find()
   res.status(200).json({
-    message: "All Products",
+    success: true,
+    products,
   });
 };
