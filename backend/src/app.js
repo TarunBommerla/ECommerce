@@ -1,6 +1,6 @@
 import express from "express";
 import product from "./routes/productRoutes.js";
-import errorHandlerMiddlewares from "./middlewares/errorMiddlewares.js";
+import errorMiddleware from "./middlewares/errorMiddlewares.js";
 
 const app = express();
 
@@ -10,6 +10,6 @@ app.use(express.json());
 //routes
 app.use("/api/v1", product);
 
-app.use(errorHandlerMiddlewares)
+app.use(errorMiddleware)
 
 export default app;
