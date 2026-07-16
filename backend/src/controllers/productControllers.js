@@ -1,5 +1,6 @@
 import { Product } from "../models/productModel.js";
 import ApiError from "../utils/ApiError.js";
+import ApiFunctionality from "../utils/ApiFunctionality.js";
 import AsyncHandler from "../utils/AsyncHandler.js";
 
 //CREATING PRODUCTS
@@ -13,10 +14,32 @@ export const createProducts = AsyncHandler(async (req, res, next) => {
 
 //GET ALL PRODUCTS
 export const getAllProducts = AsyncHandler(async (req, res, next) => {
-  const products = await Product.find();
+  const resultsPerPage = 3;
+  const APIFunction = new ApiFunctionality(Product.find(), req.query)
+    .search()
+    .filter();
+
+  //Getting filtered Query before pagination
+  const filteredQuery = APIFunction.query.clone();
+
+  // Counting total Products
+  const productCount = await filteredQuery.countDocuments();
+
+  //calculating totalpages based on productCount and resultsPerPage
+  const totalPages = Math.ceil(productCount / resultsPerPage);
+  const page = Number(req.query.page) || 1;
+  console.log(pages);
+  
+  if(page>totalPages && productCount>0){
+    return next(new ApiError(404, "This page doesn't exists"))
+  }
+
+  const products = await APIFunction.query;
   res.status(200).json({
     success: true,
     products,
+    productCount,
+    totalPages,
   });
 });
 
