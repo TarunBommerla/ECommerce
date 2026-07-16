@@ -9,7 +9,10 @@ import {
 
 const router = express.Router();
 
+// FOR PRODUCTS
 router.route("/products").get(getAllProducts).post(createProducts);
+
+// FOR PRODUCT ID
 router
   .route("/product/:id")
   .put(updateProduct)

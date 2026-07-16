@@ -4,6 +4,7 @@ import { DB_NAME } from "../constants.js";
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
+// CONNECTING TO THE MONGO DATABASE USING MONGOOSE
 const connectDB = () => {
   return mongoose
     .connect(`${process.env.MONGODB_URI}/${DB_NAME}`)
