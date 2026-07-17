@@ -28,17 +28,26 @@ export const getAllProducts = AsyncHandler(async (req, res, next) => {
   //calculating totalpages based on productCount and resultsPerPage
   const totalPages = Math.ceil(productCount / resultsPerPage);
   const page = Number(req.query.page) || 1;
-  console.log(pages);
-  
-  if(page>totalPages && productCount>0){
-    return next(new ApiError(404, "This page doesn't exists"))
+
+  if (page > totalPages && productCount > 0) {
+    throw new ApiError(404, "This Page Doesn't Exists");
   }
 
+  //Apply Pagination
+  APIFunction.pagination(resultsPerPage);
   const products = await APIFunction.query;
+
+  // If it Doesn't have any Product or Product Length is equal to 'Zero' it Throws an ERROR
+  if (!products || products.length === 0) {
+    throw new ApiError(404, "Products Not Found");
+  }
+
   res.status(200).json({
     success: true,
     products,
     productCount,
+    resultsPerPage,
+    currentPage: page,
     totalPages,
   });
 });
