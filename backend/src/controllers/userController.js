@@ -1,6 +1,7 @@
 import AsyncHandler from "../utils/AsyncHandler.js";
 import { User } from "../models/usersModel.js";
 import ApiError from "../utils/ApiError.js";
+import { sendToken } from "../utils/JWTToken.js";
 
 // USER REGISTERING
 export const registerUser = AsyncHandler(async (req, res, next) => {
@@ -19,13 +20,7 @@ export const registerUser = AsyncHandler(async (req, res, next) => {
   });
 
   // GENERATING TOKEN FOR USER
-  const token = user.generateAccessToken();
-
-  res.status(201).json({
-    success: true,
-    user,
-    token,
-  });
+  sendToken(user, 201, res);
 });
 
 // USER LOGIN
@@ -51,11 +46,19 @@ export const loginUser = AsyncHandler(async (req, res, next) => {
   }
 
   // GENERATING TOKEN FOR A USER
-  const token = user.generateAccessToken();
+  sendToken(user, 200, res);
+});
+
+// USER LOGOUT
+export const logout = AsyncHandler(async(req, res, next) => {
+
+  res.cookie('token', null,{
+    expires: new Date(Date.now()),
+    httpOnly: true
+  })
 
   res.status(200).json({
     success: true,
-    user,
-    token,
-  });
-});
+    message: "Successfully Logged Out"
+  })
+})
