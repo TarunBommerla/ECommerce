@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const userSchema = new mongoose.Schema(
   {
@@ -43,7 +44,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // PASSWORD HASHING
-userSchema.pre("save", async function () {
+userSchema.pre("save", async function (next) {
   // ONLY IF PASSWORD IS MODIFIED
   if (!this.isModified("password")) return;
 
@@ -66,6 +67,24 @@ userSchema.methods.generateAccessToken = function () {
 //PASSWORD COMPARISION
 userSchema.methods.verifyPassword = async function (userEnteredPassword) {
   return await bcrypt.compare(userEnteredPassword, this.password);
+};
+
+// GENERATING RESET PASSWORD TOKENS
+userSchema.methods.generatePasswordResetToken = function () {
+  // Generate a random 20-byte token and convert it to a hexadecimal string
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  // Hash the token using SHA-256 before storing it in the database. This ensures the actual token is never stored in plain text
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // Set token expiration time to 30 minutes from the current time. After this time, the token becomes invalid
+  this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
+
+  // Return the original token
+  return resetToken;
 };
 
 export const User = mongoose.model("User", userSchema);
