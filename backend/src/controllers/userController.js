@@ -3,6 +3,7 @@ import { User } from "../models/usersModel.js";
 import ApiError from "../utils/ApiError.js";
 import { sendToken } from "../utils/JWTToken.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import crypto from "crypto";
 
 // USER REGISTERING
 export const registerUser = AsyncHandler(async (req, res, next) => {
@@ -63,7 +64,7 @@ export const logout = AsyncHandler(async (req, res, next) => {
   });
 });
 
-// RESET PASSWORD
+// FORGOT PASSWORD
 export const resetPasswordRequest = AsyncHandler(async (req, res, next) => {
   // Extract email from the request body
   const { email } = req.body;
@@ -119,4 +120,73 @@ export const resetPasswordRequest = AsyncHandler(async (req, res, next) => {
     // Throw error response
     throw new ApiError(500, "Couldn't send mail, Please try again later");
   }
+});
+
+// RESET PASSWORD
+export const resetPassword = AsyncHandler(async (req, res, next) => {
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+  if (!user) {
+    throw new ApiError(
+      400,
+      "Reset Password Token is Invalid or has been Expired",
+    );
+  }
+
+  const { password, confirmPassword } = req.body;
+  if (password !== confirmPassword) {
+    throw new ApiError(400, "Password Doesn't match");
+  }
+  user.password = password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+  await user.save();
+  sendToken(user, 201, res);
+});
+
+// GET USER DETAILS
+export const getUserDetails = AsyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// UPDATE THE PASSWORD
+export const updatePassword = AsyncHandler(async (req, res, next) => {
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+  const user = await User.findById(req.user.id).select("+password");
+  const checkPasswordMatch = await user.verifyPassword(oldPassword);
+  if (!checkPasswordMatch) {
+    throw new ApiError(400, "Old Password is Incorrect");
+  }
+  if (newPassword !== confirmPassword) {
+    throw new ApiError(400, "Password Doesn't Match");
+  }
+  user.password = newPassword;
+  await user.save();
+  sendToken(user, 200, res);
+});
+
+// UPDATE USER PROFILE
+export const updateProfile = AsyncHandler(async (req, res, next) => {
+  const { name, email } = req.body;
+  const updateUserProfile = { name, email };
+  const user = await User.findByIdAndUpdate(req.user.id, updateUserProfile, {
+    new: true,
+    runValidators: true,
+  });
+  res.status(200).json({
+    success: true,
+    message: "Profile updated Successfully",
+    user,
+  });
 });

@@ -14,16 +14,18 @@ import {
 const router = express.Router();
 
 // FOR PRODUCTS
+router.route("/products").get(getAllProducts);
+
+// PRODUCT CREATION
 router
-  .route("/products")
-  .get(verifyUserAuth, getAllProducts)
+  .route("/admin/products/create")
   .post(verifyUserAuth, roleBasedAccess("admin"), createProducts);
 
 // FOR PRODUCT ID
 router
   .route("/product/:id")
-  .put(verifyUserAuth,roleBasedAccess("admin"), updateProduct)
-  .delete(verifyUserAuth,roleBasedAccess("admin"), deleteProduct)
+  .put(verifyUserAuth, roleBasedAccess("admin"), updateProduct)
+  .delete(verifyUserAuth, roleBasedAccess("admin"), deleteProduct)
   .get(verifyUserAuth, getSingleProduct);
 
 export default router;
