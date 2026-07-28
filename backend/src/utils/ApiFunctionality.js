@@ -4,7 +4,7 @@ class ApiFunctionality {
     this.querystr = querystr;
   }
 
-  // implementing search function
+  // -------------------------implementing search function
   search() {
     const keyword = this.querystr.keyword
       ? {

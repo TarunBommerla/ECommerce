@@ -3,7 +3,7 @@ import ApiError from "../utils/ApiError.js";
 import AsyncHandler from "../utils/AsyncHandler.js";
 import jwt from "jsonwebtoken";
 
-// TO CHECK USER IS AUTHENTICATED
+// -------------------------TO CHECK USER IS AUTHENTICATED
 export const verifyUserAuth = AsyncHandler(async (req, res, next) => {
   // EXTRACTS JWT TOKEN FROM BROWSER COOKIES
   const { token } = req.cookies;

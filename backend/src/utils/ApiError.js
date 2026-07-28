@@ -1,7 +1,7 @@
-// INHERITING FROM NODE ERROR
+// -------------------------INHERITING FROM NODE ERROR
 class ApiError extends Error {
   
-  //CREATING CONSTRUCTOR
+  // -------------------------CREATING CONSTRUCTOR
   constructor(
     statusCode,
     message = "Something went wrong",

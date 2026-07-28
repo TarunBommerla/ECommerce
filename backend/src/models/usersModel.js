@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// PASSWORD HASHING
+// -------------------------PASSWORD HASHING
 userSchema.pre("save", async function (next) {
   // ONLY IF PASSWORD IS MODIFIED
   if (!this.isModified("password")) return;
@@ -51,7 +51,7 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-// GENERATING ACCESS TOKENS
+// -------------------------GENERATING ACCESS TOKENS
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
@@ -64,12 +64,12 @@ userSchema.methods.generateAccessToken = function () {
   );
 };
 
-//PASSWORD COMPARISION
+// -------------------------PASSWORD COMPARISION
 userSchema.methods.verifyPassword = async function (userEnteredPassword) {
   return await bcrypt.compare(userEnteredPassword, this.password);
 };
 
-// GENERATING RESET PASSWORD TOKENS
+// -------------------------GENERATING RESET PASSWORD TOKENS
 userSchema.methods.generatePasswordResetToken = function () {
   // Generate a random 20-byte token and convert it to a hexadecimal string
   const resetToken = crypto.randomBytes(20).toString("hex");

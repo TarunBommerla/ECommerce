@@ -3,7 +3,7 @@ import ApiError from "../utils/ApiError.js";
 import ApiFunctionality from "../utils/ApiFunctionality.js";
 import AsyncHandler from "../utils/AsyncHandler.js";
 
-//CREATING PRODUCTS
+// -------------------------CREATING PRODUCTS
 export const createProducts = AsyncHandler(async (req, res, next) => {
   req.body.user = req.user.id;
   const product = await Product.create(req.body);
@@ -13,7 +13,7 @@ export const createProducts = AsyncHandler(async (req, res, next) => {
   });
 });
 
-//GET ALL PRODUCTS
+// -------------------------GET ALL PRODUCTS
 export const getAllProducts = AsyncHandler(async (req, res, next) => {
   const resultsPerPage = 3;
   const APIFunction = new ApiFunctionality(Product.find(), req.query)
@@ -53,7 +53,7 @@ export const getAllProducts = AsyncHandler(async (req, res, next) => {
   });
 });
 
-//UPDATE PRODUCTS
+// -------------------------UPDATE PRODUCTS
 export const updateProduct = AsyncHandler(async (req, res, next) => {
   const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -69,7 +69,7 @@ export const updateProduct = AsyncHandler(async (req, res, next) => {
   });
 });
 
-//DELETE PRODUCT
+// -------------------------DELETE PRODUCT
 export const deleteProduct = AsyncHandler(async (req, res, next) => {
   const product = await Product.findByIdAndDelete(req.params.id);
   if (!product) {
@@ -82,7 +82,7 @@ export const deleteProduct = AsyncHandler(async (req, res, next) => {
   });
 });
 
-//ACCESS SINGLE PRODUCT
+// -------------------------ACCESS SINGLE PRODUCT
 export const getSingleProduct = AsyncHandler(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (!product) {
@@ -95,7 +95,7 @@ export const getSingleProduct = AsyncHandler(async (req, res, next) => {
   });
 });
 
-// CREATING AND UPDATING PRODUCT REVIEW
+// -------------------------CREATING AND UPDATING PRODUCT REVIEW
 export const createReviewForProduct = AsyncHandler(async (req, res, next) => {
   // Extract rating, comment, and product ID from request body
   const { rating, comment, productId } = req.body;
@@ -135,12 +135,12 @@ export const createReviewForProduct = AsyncHandler(async (req, res, next) => {
   // Calculate total rating sum
   let sum = 0;
   product.reviews.forEach((review) => {
-    sum += product.rating;
+    sum += review.rating;
   });
 
   // Calculate average rating. If no reviews exist, set rating to 0
   product.ratings =
-    product.reviews.length > 0 ? sum / product.reviews.length : 0;
+    product.reviews.length > 0 ? Number(sum / product.reviews.length).toFixed(1) : 0;
 
   // Save updated product data to database
   await product.save({ validateBeforeSave: true });
@@ -152,7 +152,7 @@ export const createReviewForProduct = AsyncHandler(async (req, res, next) => {
   });
 });
 
-// ADMIN - GETTING ALL PRODUCTS
+// -------------------------ADMIN - GETTING ALL PRODUCTS
 export const getAdminProducts = AsyncHandler(async (req, res, next) => {
   const products = await Product.find();
   res.status(200).json({

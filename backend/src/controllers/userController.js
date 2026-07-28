@@ -5,7 +5,7 @@ import { sendToken } from "../utils/JWTToken.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import crypto from "crypto";
 
-// USER REGISTERING
+// -------------------------USER REGISTERING
 export const registerUser = AsyncHandler(async (req, res, next) => {
   // TAKING VALUES FROM BODY
   const { name, email, password } = req.body;
@@ -25,7 +25,7 @@ export const registerUser = AsyncHandler(async (req, res, next) => {
   sendToken(user, 201, res);
 });
 
-// USER LOGIN
+// -------------------------USER LOGIN
 export const loginUser = AsyncHandler(async (req, res, next) => {
   // TAKING VALUES FROM BODY
   const { email, password } = req.body;
@@ -51,7 +51,7 @@ export const loginUser = AsyncHandler(async (req, res, next) => {
   sendToken(user, 200, res);
 });
 
-// USER LOGOUT
+// -------------------------USER LOGOUT
 export const logout = AsyncHandler(async (req, res, next) => {
   res.cookie("token", null, {
     expires: new Date(Date.now()),
@@ -64,7 +64,7 @@ export const logout = AsyncHandler(async (req, res, next) => {
   });
 });
 
-// FORGOT PASSWORD
+// -------------------------FORGOT PASSWORD
 export const resetPasswordRequest = AsyncHandler(async (req, res, next) => {
   // Extract email from the request body
   const { email } = req.body;
@@ -122,7 +122,7 @@ export const resetPasswordRequest = AsyncHandler(async (req, res, next) => {
   }
 });
 
-// RESET PASSWORD
+// -------------------------RESET PASSWORD
 export const resetPassword = AsyncHandler(async (req, res, next) => {
   const resetPasswordToken = crypto
     .createHash("sha256")
@@ -151,7 +151,7 @@ export const resetPassword = AsyncHandler(async (req, res, next) => {
   sendToken(user, 201, res);
 });
 
-// GET USER DETAILS
+// -------------------------GET USER DETAILS
 export const getUserDetails = AsyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   res.status(200).json({
@@ -160,7 +160,7 @@ export const getUserDetails = AsyncHandler(async (req, res, next) => {
   });
 });
 
-// UPDATE THE PASSWORD
+// -------------------------UPDATE THE PASSWORD
 export const updatePassword = AsyncHandler(async (req, res, next) => {
   const { oldPassword, newPassword, confirmPassword } = req.body;
   const user = await User.findById(req.user.id).select("+password");
@@ -176,7 +176,7 @@ export const updatePassword = AsyncHandler(async (req, res, next) => {
   sendToken(user, 200, res);
 });
 
-// UPDATE USER PROFILE
+// -------------------------UPDATE USER PROFILE
 export const updateProfile = AsyncHandler(async (req, res, next) => {
   const { name, email } = req.body;
   const updateUserProfile = { name, email };
@@ -191,7 +191,7 @@ export const updateProfile = AsyncHandler(async (req, res, next) => {
   });
 });
 
-// ADMIN - GETTING ALL USERS INFO
+// -------------------------ADMIN - GETTING ALL USERS INFO
 export const getUsersList = AsyncHandler(async (req, res, next) => {
   const users = await User.find();
   res.status(200).json({
@@ -200,7 +200,7 @@ export const getUsersList = AsyncHandler(async (req, res, next) => {
   });
 });
 
-// ADMIN - GETTING SINGLE USER INFO
+// -------------------------ADMIN - GETTING SINGLE USER INFO
 export const getSingleUser = AsyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
   if (!user) {
@@ -212,7 +212,7 @@ export const getSingleUser = AsyncHandler(async (req, res, next) => {
   });
 });
 
-// ADMIN - CHANGING USER ROLE
+// -------------------------ADMIN - CHANGING USER ROLE
 export const updateUserRole = AsyncHandler(async (req, res, next) => {
   const { role } = req.body;
   const newUserData = {
@@ -231,7 +231,7 @@ export const updateUserRole = AsyncHandler(async (req, res, next) => {
   });
 });
 
-// ADMIN - DELETE USER PROFILE
+// -------------------------ADMIN - DELETE USER PROFILE
 export const deleteUser = AsyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
   if (!user) {

@@ -15,29 +15,29 @@ import {
 
 const router = express.Router();
 
-// TO GET ALL PRODUCTS
+// -------------------------TO GET ALL PRODUCTS
 router.route("/products").get(getAllProducts);
 
-// GET ALL PRODUCTS BY ADMIN
+// -------------------------GET ALL PRODUCTS BY ADMIN
 router
   .route("/admin/products")
   .get(verifyUserAuth, roleBasedAccess("admin"), getAdminProducts);
 
-// PRODUCT CREATION
+// -------------------------PRODUCT CREATION
 router
   .route("/admin/products/create")
   .post(verifyUserAuth, roleBasedAccess("admin"), createProducts);
 
-// TO UPDATE AND DELETE PRODUCT
+// -------------------------TO UPDATE AND DELETE PRODUCT
 router
   .route("/admin/product/:id")
   .put(verifyUserAuth, roleBasedAccess("admin"), updateProduct)
   .delete(verifyUserAuth, roleBasedAccess("admin"), deleteProduct);
 
-// GET PRODUCT BY ID
+// -------------------------GET PRODUCT BY ID
 router.route("/product/:id").get(getSingleProduct);
 
-// PRODUCT REVIEW
+// -------------------------PRODUCT REVIEW
 router.route("/review").put(verifyUserAuth, createReviewForProduct);
 
 export default router;

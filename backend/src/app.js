@@ -6,11 +6,11 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
-//middleware
+// -------------------------middleware
 app.use(express.json());
 app.use(cookieParser())
 
-//routes
+// -------------------------routes
 app.use("/api/v1", product);
 app.use("/api/v1", user);
 

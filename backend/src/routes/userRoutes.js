@@ -20,7 +20,7 @@ import {
 
 const router = express.Router();
 
-// USER ROUTES
+// -------------------------USER ROUTES
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/logout").post(logout);
@@ -30,7 +30,7 @@ router.route("/profile").post(verifyUserAuth, getUserDetails);
 router.route("/password/update").post(verifyUserAuth, updatePassword);
 router.route("/profile/update").post(verifyUserAuth, updateProfile);
 
-// ADMIN ROUTES
+// -------------------------ADMIN ROUTES
 router
   .route("/admin/users")
   .get(verifyUserAuth, roleBasedAccess("admin"), getUsersList);
