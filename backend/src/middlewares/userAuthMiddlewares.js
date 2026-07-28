@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 export const verifyUserAuth = AsyncHandler(async (req, res, next) => {
   // EXTRACTS JWT TOKEN FROM BROWSER COOKIES
   const { token } = req.cookies;
-  console.log(token);
 
   // IF NO TOKEN IS PRESENT< USER IS NOT AUTHENTICATED
   if (!token) {
@@ -19,7 +18,6 @@ export const verifyUserAuth = AsyncHandler(async (req, res, next) => {
 
   // VERIFY THE TOKEN USING THE ACCESS TOKEN SECRET
   const decodeData = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-  console.log(decodeData);
 
   // FIND THE USER IN DATABASE USING THE ID STORED IN TOKEN PAYLOAD
   req.user = await User.findById(decodeData.id);

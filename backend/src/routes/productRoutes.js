@@ -5,6 +5,8 @@ import {
   updateProduct,
   deleteProduct,
   getSingleProduct,
+  getAdminProducts,
+  createReviewForProduct,
 } from "../controllers/productControllers.js";
 import {
   roleBasedAccess,
@@ -13,19 +15,29 @@ import {
 
 const router = express.Router();
 
-// FOR PRODUCTS
+// TO GET ALL PRODUCTS
 router.route("/products").get(getAllProducts);
+
+// GET ALL PRODUCTS BY ADMIN
+router
+  .route("/admin/products")
+  .get(verifyUserAuth, roleBasedAccess("admin"), getAdminProducts);
 
 // PRODUCT CREATION
 router
   .route("/admin/products/create")
   .post(verifyUserAuth, roleBasedAccess("admin"), createProducts);
 
-// FOR PRODUCT ID
+// TO UPDATE AND DELETE PRODUCT
 router
-  .route("/product/:id")
+  .route("/admin/product/:id")
   .put(verifyUserAuth, roleBasedAccess("admin"), updateProduct)
-  .delete(verifyUserAuth, roleBasedAccess("admin"), deleteProduct)
-  .get(verifyUserAuth, getSingleProduct);
+  .delete(verifyUserAuth, roleBasedAccess("admin"), deleteProduct);
+
+// GET PRODUCT BY ID
+router.route("/product/:id").get(getSingleProduct);
+
+// PRODUCT REVIEW
+router.route("/review").put(verifyUserAuth, createReviewForProduct);
 
 export default router;

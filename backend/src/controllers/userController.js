@@ -190,3 +190,56 @@ export const updateProfile = AsyncHandler(async (req, res, next) => {
     user,
   });
 });
+
+// ADMIN - GETTING ALL USERS INFO
+export const getUsersList = AsyncHandler(async (req, res, next) => {
+  const users = await User.find();
+  res.status(200).json({
+    success: true,
+    users,
+  });
+});
+
+// ADMIN - GETTING SINGLE USER INFO
+export const getSingleUser = AsyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    throw new ApiError(400, "No User Found");
+  }
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// ADMIN - CHANGING USER ROLE
+export const updateUserRole = AsyncHandler(async (req, res, next) => {
+  const { role } = req.body;
+  const newUserData = {
+    role,
+  };
+  const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+    new: true,
+    runValidators: true,
+  });
+  if (!user) {
+    throw new ApiError(400, "No User Found");
+  }
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// ADMIN - DELETE USER PROFILE
+export const deleteUser = AsyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    throw new ApiError(400, "No User Found");
+  }
+  await User.findByIdAndDelete(req.params.id)
+  res.status(200).json({
+    success: true,
+    message: "User Deleted Successfully",
+  });
+});

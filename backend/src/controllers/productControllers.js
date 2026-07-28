@@ -94,3 +94,69 @@ export const getSingleProduct = AsyncHandler(async (req, res, next) => {
     product,
   });
 });
+
+// CREATING AND UPDATING PRODUCT REVIEW
+export const createReviewForProduct = AsyncHandler(async (req, res, next) => {
+  // Extract rating, comment, and product ID from request body
+  const { rating, comment, productId } = req.body;
+
+  // Create a review object using the logged-in user's details
+  const review = {
+    user: req.user._id,
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+  };
+
+  // Find the product for which the review is being added
+  const product = await Product.findById(productId);
+
+  // Check whether the current user has already reviewed this product
+  const reviewExists = product.reviews.find(
+    (review) => review.user.toString() === req.user.id.toString(),
+  );
+
+  // If user has already reviewed the product
+  if (reviewExists) {
+    // Update the existing review
+    product.reviews.forEach((review) => {
+      if (review.user.toString() === req.user.id.toString()) {
+        // Update rating and comment
+        ((review.rating = rating), (review.comment = comment));
+      }
+    });
+  } else {
+    // If user hasn't reviewed before, add a new review
+    product.reviews.push(review);
+  }
+  // Update total number of reviews
+  product.numOfReviews = product.reviews.length;
+
+  // Calculate total rating sum
+  let sum = 0;
+  product.reviews.forEach((review) => {
+    sum += product.rating;
+  });
+
+  // Calculate average rating. If no reviews exist, set rating to 0
+  product.ratings =
+    product.reviews.length > 0 ? sum / product.reviews.length : 0;
+
+  // Save updated product data to database
+  await product.save({ validateBeforeSave: true });
+
+  // Send success response
+  res.status(200).json({
+    success: true,
+    product,
+  });
+});
+
+// ADMIN - GETTING ALL PRODUCTS
+export const getAdminProducts = AsyncHandler(async (req, res, next) => {
+  const products = await Product.find();
+  res.status(200).json({
+    success: true,
+    products,
+  });
+});
