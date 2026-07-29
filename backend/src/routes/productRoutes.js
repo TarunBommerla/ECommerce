@@ -7,6 +7,8 @@ import {
   getSingleProduct,
   getAdminProducts,
   createReviewForProduct,
+  getProductReview,
+  deleteReview,
 } from "../controllers/productControllers.js";
 import {
   roleBasedAccess,
@@ -39,5 +41,6 @@ router.route("/product/:id").get(getSingleProduct);
 
 // -------------------------PRODUCT REVIEW
 router.route("/review").put(verifyUserAuth, createReviewForProduct);
+router.route("/reviews").get(getProductReview).delete(verifyUserAuth, deleteReview);
 
 export default router;

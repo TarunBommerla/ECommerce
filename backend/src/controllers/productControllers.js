@@ -111,6 +111,11 @@ export const createReviewForProduct = AsyncHandler(async (req, res, next) => {
   // Find the product for which the review is being added
   const product = await Product.findById(productId);
 
+  // If product doesn't exist, throw an error
+  if (!product) {
+    throw new ApiError(400, "No Product Found");
+  }
+
   // Check whether the current user has already reviewed this product
   const reviewExists = product.reviews.find(
     (review) => review.user.toString() === req.user.id.toString(),
@@ -140,7 +145,9 @@ export const createReviewForProduct = AsyncHandler(async (req, res, next) => {
 
   // Calculate average rating. If no reviews exist, set rating to 0
   product.ratings =
-    product.reviews.length > 0 ? Number(sum / product.reviews.length).toFixed(1) : 0;
+    product.reviews.length > 0
+      ? Number(sum / product.reviews.length).toFixed(1)
+      : 0;
 
   // Save updated product data to database
   await product.save({ validateBeforeSave: true });
@@ -149,6 +156,69 @@ export const createReviewForProduct = AsyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     product,
+  });
+});
+
+// -------------------------GETTING PRODUCT REVIEWS
+export const getProductReview = AsyncHandler(async (req, res, next) => {
+  const product = await Product.findById(req.query.id);
+  if (!product) {
+    throw new ApiError(400, "No Product Found");
+  }
+  let totalReviews = product.reviews.length;
+  res.status(200).json({
+    success: true,
+    totalReviews,
+    reviews: product.reviews,
+  });
+});
+
+// -------------------------DELETE PRODUCT REVIEWS
+export const deleteReview = AsyncHandler(async (req, res, next) => {
+  // Find the product using the productId passed in query parameters
+  const product = await Product.findById(req.query.productId);
+
+  // If product doesn't exist, throw an error
+  if (!product) {
+    throw new ApiError(400, "No Product Found");
+  }
+
+  // Create a new reviews array excluding the review, whose ID matches the provided review ID
+  const reviews = product.reviews.filter(
+    (review) => review._id.toString() !== req.query.id.toString(),
+  );
+
+  // Calculate the sum of all remaining review ratings
+  let sum = 0;
+  reviews.forEach((review) => {
+    sum += review.rating;
+  });
+
+  // Calculate the new average rating, If no reviews remain, set rating to 0
+  const ratings =
+    reviews.length > 0 ? Number(sum / reviews.length).toFixed(1) : 0;
+
+  // Update the total number of reviews
+  const numOfReviews = reviews.length;
+
+  // Update the product document in the database
+  await Product.findByIdAndUpdate(
+    req.query.productId,
+    {
+      reviews, // Updated reviews array
+      ratings, // New average rating
+      numOfReviews, // Updated review count
+    },
+    {
+      new: true, // Return updated document
+      runValidators: true, // Apply schema validations
+    },
+  );
+
+  // Send success response
+  res.status(200).json({
+    success: true,
+    message: "Review Deleted Successfully",
   });
 });
 

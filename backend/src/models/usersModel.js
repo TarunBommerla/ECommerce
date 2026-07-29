@@ -11,18 +11,21 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please enter the username"],
       minLength: [3, "Username Should more than 3 Characters"],
     },
+
     email: {
       type: String,
       required: [true, "Please enter your E-mail"],
       unique: true,
       validate: [validator.isEmail, "Please enter your valid E-mail"],
     },
+
     password: {
       type: String,
       required: [true, "Please enter your Password"],
       minLength: [8, "Password should be greater than 8 Characters"],
       select: false,
     },
+
     avatar: {
       public_id: {
         type: String,
@@ -33,11 +36,14 @@ const userSchema = new mongoose.Schema(
         required: true,
       },
     },
+
     role: {
       type: String,
       default: "user",
     },
+
     resetPasswordToken: String,
+    
     resetPasswordExpire: Date,
   },
   { timestamps: true },
