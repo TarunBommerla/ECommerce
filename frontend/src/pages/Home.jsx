@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import ImageSlider from "../components/ImageSlider";
 import Product from "../components/Product";
+import PageTitle from "../components/PageTitle";
 
 const products = [
   {
@@ -10,7 +11,7 @@ const products = [
     name: "product1",
     description: "product description1",
     price: 100,
-    ratings: 3.8,
+    ratings: 3.5,
     brand: "Rare Rabbit1",
     stock: 1,
     numOfReviews: 2,
@@ -220,6 +221,7 @@ const products = [
 const Home = () => {
   return (
     <div>
+      <PageTitle title="AXION - Home"/>
       <Navbar />
       <ImageSlider />
       <div className="max-w-8xl mx-auto px-6 md:px-10 lg:px-16 py-12">
