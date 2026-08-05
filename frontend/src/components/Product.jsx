@@ -13,7 +13,7 @@ const Product = ({ product }) => {
 
   return (
     // Entire card acts as a link to the product details page
-    <Link to={product._id} className="group block">
+    <Link to={`/product/${product._id}`} className="group block">
       {/* ================= Product Card Container ================= */}
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
         {/* ================= Product Image Section ================= */}
@@ -24,7 +24,7 @@ const Product = ({ product }) => {
             // Alternative text for accessibility
             alt={product.name}
             // Product image styling and hover animation
-            className="h-60 w-full object-cover transition-transform duration-500 group-hover:scale-90"
+            className="h-75 w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         </div>
 

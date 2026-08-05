@@ -43,7 +43,7 @@ const ImageSlider = () => {
           {images.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentIndex(index)}
+              onClick={() => setCurrentIndex(index)} key={index}
               className={`h-3 w-3 rounded-full transition-all duration-300 ${
                 currentIndex === index
                   ? "bg-white scale-125"

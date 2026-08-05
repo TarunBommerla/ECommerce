@@ -15,7 +15,7 @@ export const createProducts = AsyncHandler(async (req, res, next) => {
 
 // -------------------------GET ALL PRODUCTS
 export const getAllProducts = AsyncHandler(async (req, res, next) => {
-  const resultsPerPage = 3;
+  const resultsPerPage = 5;
   const APIFunction = new ApiFunctionality(Product.find(), req.query)
     .search()
     .filter();
