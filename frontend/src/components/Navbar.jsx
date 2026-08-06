@@ -6,16 +6,34 @@ import {
   RiUserAddLine,
 } from "@remixicon/react";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
 
-  const toogleMenu = () => {
+  const toggleMenu = () => {
     setOpen(!open);
   };
 
-  const isAuthenticated = true;
+  const isAuthenticated = false;
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+
+    const keyword = searchQuery.trim();
+
+    if (keyword) {
+      navigate(`/products?keyword=${encodeURIComponent(keyword)}&page=1`);
+    } else {
+      navigate(`/products?page=1`);
+    }
+
+    setSearchQuery("");
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-neutral-800 bg-black text-white">
@@ -68,11 +86,13 @@ const Navbar = () => {
         <div className="flex items-center gap-4">
           {/* Search */}
           <div className="relative hidden md:block">
-            <form>
+            <form onSubmit={handleSearchSubmit}>
               <input
                 type="text"
                 placeholder="Search Products..."
                 className="w-56 rounded-full border border-neutral-700 bg-transparent py-2 pl-4 pr-11 text-sm outline-none transition focus:border-white"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
 
               <button
@@ -109,7 +129,7 @@ const Navbar = () => {
           )}
 
           {/* Mobile Menu Button */}
-          <button onClick={toogleMenu} className="lg:hidden">
+          <button onClick={toggleMenu} className="lg:hidden">
             {open ? <RiCloseLine size={28} /> : <RiMenuLine size={28} />}
           </button>
         </div>
@@ -118,15 +138,17 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div
         className={`overflow-hidden bg-black transition-all duration-300 lg:hidden ${
-          open ? "max-h-125" : "max-h-0"
+          open ? "max-h-screen" : "max-h-0"
         }`}
       >
         <div className="border-t border-neutral-800 px-5 py-6">
           {/* Mobile Search */}
-          <form className="relative mb-6">
+          <form onSubmit={handleSearchSubmit} className="relative mb-6">
             <input
               type="text"
               placeholder="Search Products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full rounded-full border border-neutral-700 bg-transparent py-3 pl-4 pr-11 text-sm outline-none"
             />
 

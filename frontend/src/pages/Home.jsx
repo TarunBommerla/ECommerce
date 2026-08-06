@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProduct, removeErrors } from "../features/products/productSlice";
 import Loader from "../components/Loader";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const { loading, error, products, productCount } = useSelector((state) => {
@@ -17,13 +18,13 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getProduct());
+    dispatch(getProduct({ keyword: "" }));
   }, [dispatch]);
 
   useEffect(() => {
     if (error) {
-      toast.error(error.message,{position:"top-center",autoClose: 3000});
-      dispatch(removeErrors())
+      toast.error(error.message, { position: "top-center", autoClose: 3000 });
+      dispatch(removeErrors());
     }
   }, [dispatch, error]);
 
@@ -42,9 +43,12 @@ const Home = () => {
                 Trending Now
               </h2>
 
-              <button className="text-sm uppercase tracking-widest text-gray-600 hover:text-black transition">
+              <Link
+                to="/products"
+                className="text-sm uppercase tracking-widest text-gray-600 transition hover:text-black"
+              >
                 View All
-              </button>
+              </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
               {products.map((product, index) => {
