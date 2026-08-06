@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import ProductDetails from './pages/ProductDetails'
 import Products from './pages/Products'
 import Register from './user/Register'
+import Login from './user/Login'
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path='/products' element={<Products />} />
         <Route path='/products/:keyword' element={<Products />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<Login />} />
       </Routes>
     </div>
   )

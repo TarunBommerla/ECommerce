@@ -1,6 +1,12 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import {
+  register,
+  removeErrors,
+  removeSuccess,
+} from "../features/user/userSlice";
 
 const Register = () => {
   const [user, setUser] = useState({
@@ -12,6 +18,9 @@ const Register = () => {
   const [avatar, setAvatar] = useState("");
   const [avatarPreview, setAvatarPreview] = useState("./images/profile.jpg");
   const { name, email, password } = user;
+  const { success, loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const registerDataChange = (e) => {
     if (e.target.name === "avatar") {
@@ -39,19 +48,38 @@ const Register = () => {
       });
       return;
     }
-    const myForm = newFormData();
-    myForm.set("name", name);
-    myForm.set("email", email);
-    myForm.set("password", password);
-    myForm.set("avatar", avatar);
+    dispatch(
+      register({
+        name,
+        email,
+        password,
+        avatar,
+      }),
+    );
   };
+  useEffect(() => {
+    if (error) {
+      toast.error(error, { position: "top-center", autoClose: 3000 });
+      dispatch(removeErrors());
+    }
+  }, [dispatch, error]);
+
+  useEffect(() => {
+    if (success) {
+      toast.success("Registration Successful", { position: "top-center", autoClose: 3000 });
+      dispatch(removeSuccess());
+      navigate("/login");
+    }
+  }, [dispatch, success]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-10">
       <div className="w-full max-w-md">
         <form
           className="rounded-3xl border border-gray-200 bg-white p-8 shadow-lg"
-          onSubmit={registerSubmit} encType="multipart/form-data">
+          onSubmit={registerSubmit}
+          encType="multipart/form-data"
+        >
           {/* Heading */}
           <div className="mb-8 text-center">
             <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
