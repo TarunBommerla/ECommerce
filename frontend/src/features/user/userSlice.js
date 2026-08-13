@@ -6,7 +6,11 @@ export const register = createAsyncThunk(
   "user/register",
   async (userData, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post("/api/v1/register", userData);
+      const { data } = await axios.post("/api/v1/register", userData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log("Registration data:", data);
       return data;
     } catch (error) {
@@ -28,7 +32,7 @@ export const login = createAsyncThunk(
         },
       };
       const { data } = await axios.post(
-        "api/v1/login",
+        "/api/v1/login",
         { email, password },
         config,
       );
@@ -36,7 +40,37 @@ export const login = createAsyncThunk(
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data || "Registration failed. Please try again later",
+        error.response?.data || "Login Failed. Please try again later",
+      );
+    }
+  },
+);
+
+// LOADING USER
+export const loadUser = createAsyncThunk(
+  "user/loadUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get("/api/v1/profile");
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to Load User Profile",
+      );
+    }
+  },
+);
+
+// LOGOUT USER
+export const logout = createAsyncThunk(
+  "user/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post("/api/v1/logout", {withCredentials: true});
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to Logout",
       );
     }
   },
@@ -63,7 +97,7 @@ const userSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    // REGISTER CASES
+    // ------------------------- REGISTER CASES
     builder
       // REGISTER PENDING
       .addCase(register.pending, (state) => {
@@ -77,7 +111,7 @@ const userSlice = createSlice({
         state.error = null;
         state.success = action.payload.success;
         state.user = action.payload.user || null;
-        state.isAuthenticated = Boolean(action.payload.user);
+        state.isAuthenticated = Boolean(action.payload?.user);
       })
 
       // REGISTER FAILED
@@ -86,12 +120,11 @@ const userSlice = createSlice({
         state.error =
           action.payload?.message ||
           "Registration Failed. Please try again later";
-
         state.user = null;
         state.isAuthenticated = false;
       });
 
-    // LOGIN CASES
+    // ------------------------- LOGIN CASES
     builder
       // LOGIN PENDING
       .addCase(login.pending, (state) => {
@@ -106,18 +139,65 @@ const userSlice = createSlice({
         state.success = action.payload.success;
         state.user = action.payload.user || null;
         state.isAuthenticated = Boolean(action.payload.user);
-        console.log(state.user);
       })
 
       // LOGIN FAILED
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error =
-          action.payload?.message ||
-          "Registration Failed. Please try again later";
+          action.payload?.message || "Login Failed. Please try again later";
 
         state.user = null;
         state.isAuthenticated = false;
+      });
+
+      // ------------------------- LOADING USER CASES
+      builder
+      // LOADING USER PENDING
+      .addCase(loadUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      // LOADING USER SUCCESS
+      .addCase(loadUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.user = action.payload.user || null;
+        state.isAuthenticated = Boolean(action.payload.user);
+      })
+
+      // LOADING USER FAILED
+      .addCase(loadUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload?.message || "Failed to Load User Profile";
+        state.user = null;
+        state.isAuthenticated = false;
+      });
+
+
+      // ------------------------- LOGOUT CASES
+      builder
+      // LOGOUT PENDING
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      // LOGOUT USER SUCCESS
+      .addCase(logout.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+
+      // LOGOUT USER FAILED
+      .addCase(logout.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload?.message || "Failed to Logout";
       });
   },
 });

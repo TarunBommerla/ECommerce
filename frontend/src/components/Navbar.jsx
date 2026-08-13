@@ -6,6 +6,7 @@ import {
   RiUserAddLine,
 } from "@remixicon/react";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
@@ -15,7 +16,7 @@ const Navbar = () => {
     setOpen(!open);
   };
 
-  const isAuthenticated = false;
+  const { isAuthenticated } = useSelector((state) => state.user);
 
   const [searchQuery, setSearchQuery] = useState("");
 

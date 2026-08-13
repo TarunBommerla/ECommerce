@@ -15,7 +15,7 @@ const Register = () => {
     password: "",
   });
 
-  const [avatar, setAvatar] = useState("");
+  const [avatar, setAvatar] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState("./images/profile.jpg");
   const { name, email, password } = user;
   const { success, loading, error } = useSelector((state) => state.user);
@@ -24,14 +24,17 @@ const Register = () => {
 
   const registerDataChange = (e) => {
     if (e.target.name === "avatar") {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setAvatarPreview(reader.result);
-          setAvatar(reader.result);
-        }
-      };
       if (e.target.files && e.target.files[0]) {
+        setAvatar(e.target.files[0]);
+
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          if (reader.readyState === 2) {
+            setAvatarPreview(reader.result);
+          }
+        };
+
         reader.readAsDataURL(e.target.files[0]);
       }
     } else {
@@ -41,22 +44,19 @@ const Register = () => {
 
   const registerSubmit = (e) => {
     e.preventDefault();
-    if (!name || !email || !password) {
-      toast.error("Please fill the required fields", {
-        position: "top-center",
-        autoClose: 3000,
-      });
-      return;
+
+    const formData = new FormData();
+
+    formData.set("name", name);
+    formData.set("email", email);
+    formData.set("password", password);
+
+    if (avatar) {
+      formData.set("avatar", avatar);
     }
-    dispatch(
-      register({
-        name,
-        email,
-        password,
-        avatar,
-      }),
-    );
+    dispatch(register(formData));
   };
+
   useEffect(() => {
     if (error) {
       toast.error(error, { position: "top-center", autoClose: 3000 });
@@ -66,11 +66,14 @@ const Register = () => {
 
   useEffect(() => {
     if (success) {
-      toast.success("Registration Successful", { position: "top-center", autoClose: 3000 });
+      toast.success("Registration Successful", {
+        position: "top-center",
+        autoClose: 3000,
+      });
       dispatch(removeSuccess());
       navigate("/login");
     }
-  }, [dispatch, success]);
+  }, [dispatch, success, navigate]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-10">
@@ -154,7 +157,7 @@ const Register = () => {
             type="submit"
             className="w-full rounded-xl bg-black py-3 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-gray-800"
           >
-            Sign Up
+            {loading? "Signing Up": "Sign Up"}
           </button>
 
           {/* Login Link */}

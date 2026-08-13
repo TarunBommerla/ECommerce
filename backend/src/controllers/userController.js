@@ -4,11 +4,23 @@ import ApiError from "../utils/ApiError.js";
 import { sendToken } from "../utils/JWTToken.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import crypto from "crypto";
+import { v2 as cloudinary } from "cloudinary";
 
 // -------------------------USER REGISTERING
 export const registerUser = AsyncHandler(async (req, res, next) => {
   // TAKING VALUES FROM BODY
   const { name, email, password } = req.body;
+  const avatarFile = req.files.avatar;
+
+  // UPLOAD AVATAR IMAGE INTO CLOUDINARY
+  const myCloud = await cloudinary.uploader.upload(
+    avatarFile.tempFilePath,
+    {
+      folder: "avatars",
+      width: 150,
+      crop: "scale",
+    },
+  );
 
   // CREATING A USER
   const user = await User.create({
@@ -16,8 +28,8 @@ export const registerUser = AsyncHandler(async (req, res, next) => {
     email,
     password,
     avatar: {
-      public_id: "This is temp ID",
-      url: "This is temp URL",
+      public_id:  myCloud.public_id,
+      url: myCloud.secure_url,
     },
   });
 
@@ -237,7 +249,7 @@ export const deleteUser = AsyncHandler(async (req, res, next) => {
   if (!user) {
     throw new ApiError(400, "No User Found");
   }
-  await User.findByIdAndDelete(req.params.id)
+  await User.findByIdAndDelete(req.params.id);
   res.status(200).json({
     success: true,
     message: "User Deleted Successfully",

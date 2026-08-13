@@ -4,12 +4,17 @@ import user from "./routes/userRoutes.js";
 import order from "./routes/orderRoutes.js";
 import errorMiddleware from "./middlewares/errorMiddlewares.js";
 import cookieParser from "cookie-parser";
+import fileUpload from "express-fileupload";
 
 const app = express();
 
 // -------------------------middleware
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  }));
 
 // -------------------------routes
 app.use("/api/v1", product);
