@@ -13,14 +13,11 @@ export const registerUser = AsyncHandler(async (req, res, next) => {
   const avatarFile = req.files.avatar;
 
   // UPLOAD AVATAR IMAGE INTO CLOUDINARY
-  const myCloud = await cloudinary.uploader.upload(
-    avatarFile.tempFilePath,
-    {
-      folder: "avatars",
-      width: 150,
-      crop: "scale",
-    },
-  );
+  const myCloud = await cloudinary.uploader.upload(avatarFile.tempFilePath, {
+    folder: "avatars",
+    width: 150,
+    crop: "scale",
+  });
 
   // CREATING A USER
   const user = await User.create({
@@ -28,7 +25,7 @@ export const registerUser = AsyncHandler(async (req, res, next) => {
     email,
     password,
     avatar: {
-      public_id:  myCloud.public_id,
+      public_id: myCloud.public_id,
       url: myCloud.secure_url,
     },
   });
@@ -192,6 +189,21 @@ export const updatePassword = AsyncHandler(async (req, res, next) => {
 export const updateProfile = AsyncHandler(async (req, res, next) => {
   const { name, email } = req.body;
   const updateUserProfile = { name, email };
+  const avatar = req.files?.avatar;
+  if (avatar) {
+    const currentUser = await User.findById(req.user.id);
+    const imageId = currentUser.avatar.public_id;
+    await cloudinary.uploader.destroy(imageId);
+    const myCloud = await cloudinary.uploader.upload(avatar.tempFilePath, {
+      folder: "avatars",
+      width: 150,
+      crop: "scale",
+    });
+    updateUserProfile.avatar = {
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url,
+    };
+  }
   const user = await User.findByIdAndUpdate(req.user.id, updateUserProfile, {
     new: true,
     runValidators: true,

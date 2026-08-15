@@ -8,6 +8,9 @@ import Login from "./user/Login";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "./features/user/userSlice";
 import UserDashBoard from "./user/UserDashBoard";
+import Profile from "./user/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
+import UpdateProfile from "./user/UpdateProfile";
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -27,8 +30,16 @@ const App = () => {
         <Route path="/products/:keyword" element={<Products />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/profile"
+          element={<ProtectedRoute element={<Profile />} />}
+        />
+        <Route
+          path="/profile/update"
+          element={<ProtectedRoute element={<UpdateProfile />} />}
+        />
       </Routes>
-      {isAuthenticated && <UserDashBoard user={user}/>}
+      {isAuthenticated && <UserDashBoard user={user} />}
     </div>
   );
 };

@@ -66,11 +66,37 @@ export const logout = createAsyncThunk(
   "user/logout",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post("/api/v1/logout", {withCredentials: true});
+      const { data } = await axios.post("/api/v1/logout", {
+        withCredentials: true,
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to Logout");
+    }
+  },
+);
+
+// UPDATEPROFILE USER
+export const updateProfile = createAsyncThunk(
+  "user/updateProfile",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const config = {
+        header: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.put(
+        "/api/v1/profile/update",
+        userData,
+        config,
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data || "Failed to Logout",
+        error.response?.data || {
+          message: "Profile Update Failed. Please Try Again Later",
+        },
       );
     }
   },
@@ -84,6 +110,7 @@ const userSlice = createSlice({
     error: null,
     success: false,
     isAuthenticated: false,
+    message: null,
   },
 
   reducers: {
@@ -151,8 +178,8 @@ const userSlice = createSlice({
         state.isAuthenticated = false;
       });
 
-      // ------------------------- LOADING USER CASES
-      builder
+    // ------------------------- LOADING USER CASES
+    builder
       // LOADING USER PENDING
       .addCase(loadUser.pending, (state) => {
         state.loading = true;
@@ -170,15 +197,13 @@ const userSlice = createSlice({
       // LOADING USER FAILED
       .addCase(loadUser.rejected, (state, action) => {
         state.loading = false;
-        state.error =
-          action.payload?.message || "Failed to Load User Profile";
+        state.error = action.payload?.message || "Failed to Load User Profile";
         state.user = null;
         state.isAuthenticated = false;
       });
 
-
-      // ------------------------- LOGOUT CASES
-      builder
+    // ------------------------- LOGOUT CASES
+    builder
       // LOGOUT PENDING
       .addCase(logout.pending, (state) => {
         state.loading = true;
@@ -196,8 +221,30 @@ const userSlice = createSlice({
       // LOGOUT USER FAILED
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
-        state.error =
-          action.payload?.message || "Failed to Logout";
+        state.error = action.payload?.message || "Failed to Logout";
+      });
+
+    // ------------------------- UPDATEPROFILE CASES
+    builder
+      // UPDATEPROFILE PENDING
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      // UPDATEPROFILE USER SUCCESS
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.user = action.payload?.user || null;
+        state.success = action.payload?.success;
+        state.message = action.payload?.message;
+      })
+
+      // UPDATEPROFILE USER FAILED
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Profile Update Failed. Please Try Again Later";
       });
   },
 });
