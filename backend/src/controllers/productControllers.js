@@ -56,7 +56,7 @@ export const getAllProducts = AsyncHandler(async (req, res, next) => {
 // -------------------------UPDATE PRODUCTS
 export const updateProduct = AsyncHandler(async (req, res, next) => {
   const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
+    returnDocument: "after",
     runValidators: true,
   });
   if (!product) {
@@ -210,7 +210,7 @@ export const deleteReview = AsyncHandler(async (req, res, next) => {
       numOfReviews, // Updated review count
     },
     {
-      new: true, // Return updated document
+      returnDocument: "after", // Return updated document
       runValidators: true, // Apply schema validations
     },
   );

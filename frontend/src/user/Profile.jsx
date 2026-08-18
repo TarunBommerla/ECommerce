@@ -22,10 +22,10 @@ const Profile = () => {
       ) : (
         <>
           <Navbar />
-          <div className="min-h-screen bg-gray-50 px-4 py-10 ">
+          <div className="min-h-screen bg-gray-50 px-4 py-10">
             <PageTitle title={`${user.name} - Profile`} />
             <div className="mx-auto max-w-6xl">
-              <div className="grid gap-8 md:grid-cols-3">
+              <div className="grid gap-8 md:grid-cols-3 mt-20">
                 {/* Left Section */}
                 <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm flex flex-col justify-center">
                   <h1 className="mb-6 text-center text-3xl font-bold text-gray-900">

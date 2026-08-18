@@ -205,7 +205,7 @@ export const updateProfile = AsyncHandler(async (req, res, next) => {
     };
   }
   const user = await User.findByIdAndUpdate(req.user.id, updateUserProfile, {
-    new: true,
+    returnDocument: "after",
     runValidators: true,
   });
   res.status(200).json({
@@ -243,7 +243,7 @@ export const updateUserRole = AsyncHandler(async (req, res, next) => {
     role,
   };
   const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
-    new: true,
+    returnDocument: "after",
     runValidators: true,
   });
   if (!user) {

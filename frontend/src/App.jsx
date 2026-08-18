@@ -11,6 +11,7 @@ import UserDashBoard from "./user/UserDashBoard";
 import Profile from "./user/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UpdateProfile from "./user/UpdateProfile";
+import UpdatePassword from "./user/UpdatePassword";
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -37,6 +38,10 @@ const App = () => {
         <Route
           path="/profile/update"
           element={<ProtectedRoute element={<UpdateProfile />} />}
+        />
+        <Route
+          path="/password/update"
+          element={<ProtectedRoute element={<UpdatePassword />} />}
         />
       </Routes>
       {isAuthenticated && <UserDashBoard user={user} />}
