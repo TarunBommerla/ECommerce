@@ -102,7 +102,7 @@ export const resetPasswordRequest = AsyncHandler(async (req, res, next) => {
     );
   }
   // Creates the password reset URL
-  const resetPasswordURL = `http://localhost:8000/api/v1/reset/${resetToken}`;
+  const resetPasswordURL = `${req.protocol}://${req.get("host")}/reset/${resetToken}`;
 
   // Email message containing the reset link
   const message = `Use the following link to reset your password: ${resetPasswordURL}. \n\n This link will be expire in 30 minutes`;

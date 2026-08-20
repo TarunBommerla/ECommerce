@@ -127,6 +127,59 @@ export const updatePassword = createAsyncThunk(
   },
 );
 
+// FORGOTPASSWORD USER
+export const forgotPassword = createAsyncThunk(
+  "user/forgotPassword",
+  async (email, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        "/api/v1/password/forgot",
+        email,
+        config,
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || {
+          message: "Email sent Failed. Please Try Again Later",
+        },
+      );
+    }
+  },
+);
+
+// RESETPASSWORD USER
+export const resetPassword = createAsyncThunk(
+  "user/resetPassword",
+  async ({ token, userData }, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        `/api/v1/reset/${token}`,
+        userData,
+        config,
+      );
+      console.log("Sending token:", token);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || {
+          message: "Email sent Failed. Please Try Again Later",
+        },
+      );
+    }
+  },
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -295,6 +348,55 @@ const userSlice = createSlice({
         state.error =
           action.payload?.message ||
           "Password Update Failed. Please Try Again Later";
+      });
+
+    // ------------------------- FORGOTPASSWORD CASES
+    builder
+      // FORGOTPASSWORD PENDING
+      .addCase(forgotPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      // FORGOTPASSWORD USER SUCCESS
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = action.payload?.success;
+        state.message = action.payload?.message;
+      })
+
+      // FORGOTPASSWORD USER FAILED
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload?.message ||
+          "Email sent Failed. Please Try Again Later";
+      });
+
+    // ------------------------- RESETPASSWORD CASES
+    builder
+      // RESETPASSWORD PENDING
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      // RESETPASSWORD USER SUCCESS
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = action.payload?.success;
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+
+      // RESETPASSWORD USER FAILED
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload?.message ||
+          "Email sent Failed. Please Try Again Later";
       });
   },
 });

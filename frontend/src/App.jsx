@@ -12,6 +12,8 @@ import Profile from "./user/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UpdateProfile from "./user/UpdateProfile";
 import UpdatePassword from "./user/UpdatePassword";
+import ForgotPassword from "./user/ForgotPassword";
+import ResetPassword from "./user/ResetPassword";
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -43,6 +45,8 @@ const App = () => {
           path="/password/update"
           element={<ProtectedRoute element={<UpdatePassword />} />}
         />
+        <Route path="/password/forgot" element={<ForgotPassword />} />
+        <Route path="/reset/:token" element={<ResetPassword />} />
       </Routes>
       {isAuthenticated && <UserDashBoard user={user} />}
     </div>
