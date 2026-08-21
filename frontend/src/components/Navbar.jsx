@@ -17,6 +17,7 @@ const Navbar = () => {
   };
 
   const { isAuthenticated } = useSelector((state) => state.user);
+  const { cartItems } = useSelector((state) => state.cart);
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -117,7 +118,7 @@ const Navbar = () => {
               />
 
               <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-white text-[10px] font-bold text-black">
-                6
+                {cartItems.length}
               </span>
             </Link>
           </div>

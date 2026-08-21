@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logout, removeSuccess } from "../features/user/userSlice";
 
 const UserDashBoard = ({ user }) => {
+  const { cartItems } = useSelector((state) => state.cart);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [menu, setMenu] = useState(false);
@@ -15,6 +16,7 @@ const UserDashBoard = ({ user }) => {
   const options = [
     { name: "Orders", funcName: orders },
     { name: "Account", funcName: profile },
+    { name: `Cart (${cartItems.length})`, funcName: MyCart },
     { name: "Logout", funcName: logoutUser },
   ];
   if (user.role === "admin") {
@@ -27,6 +29,10 @@ const UserDashBoard = ({ user }) => {
 
   function profile() {
     navigate("/profile");
+  }
+
+  function MyCart(){
+    navigate("/cart")
   }
 
   function logoutUser() {

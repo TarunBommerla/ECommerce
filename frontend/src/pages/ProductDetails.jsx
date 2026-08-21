@@ -12,14 +12,25 @@ import {
 } from "../features/products/productSlice";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
+import { addItemsToCart, removeMessage } from "../features/cart/cartSlice";
 
 const ProductDetails = () => {
   const [userRating, setUserRating] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const handleRatingChange = (newRating) => {
     setUserRating(newRating);
   };
 
   const { loading, error, product } = useSelector((state) => state.product);
+  const {
+    loading: cartLoading,
+    error: cartError,
+    success,
+    message,
+    cartItems,
+  } = useSelector((state) => state.cart);
+  console.log(cartItems);
+  
   const dispatch = useDispatch();
   const { id } = useParams();
   useEffect(() => {
@@ -36,7 +47,18 @@ const ProductDetails = () => {
       toast.error(error.message, { position: "top-center", autoClose: 3000 });
       dispatch(removeErrors());
     }
-  }, [dispatch, error]);
+
+    if (cartError) {
+      toast.error(cartError, { position: "top-center", autoClose: 3000 });
+    }
+  }, [dispatch, error, cartError]);
+
+  useEffect(() => {
+    if (success) {
+      toast.success(message, { position: "top-center", autoClose: 3000 });
+      dispatch(removeMessage());
+    }
+  }, [dispatch, success, message]);
 
   if (loading) {
     return (
@@ -57,6 +79,34 @@ const ProductDetails = () => {
       </>
     );
   }
+
+  const decreaseQuantity = () => {
+    if (quantity <= 1) {
+      toast.error("Quantity must be at least 1.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      dispatch(removeErrors());
+      return;
+    }
+    setQuantity((quantity) => quantity - 1);
+  };
+
+  const increaseQuantity = () => {
+    if (product.stock <= quantity) {
+      toast.error(
+        "You've reached the maximum available stock for this product.",
+        { position: "top-center", autoClose: 3000 },
+      );
+      dispatch(removeErrors());
+      return;
+    }
+    setQuantity((quantity) => quantity + 1);
+  };
+
+  const addToCart = () => {
+    dispatch(addItemsToCart({ id, quantity }));
+  };
 
   return (
     <>
@@ -117,18 +167,24 @@ const ProductDetails = () => {
                   <span className="font-medium text-gray-700">Quantity</span>
 
                   <div className="flex items-center overflow-hidden rounded-lg border border-gray-300">
-                    <button className="flex h-10 w-10 items-center justify-center border-r border-gray-300 transition hover:bg-gray-100">
+                    <button
+                      className="flex h-10 w-10 items-center justify-center border-r border-gray-300 transition hover:bg-gray-100"
+                      onClick={decreaseQuantity}
+                    >
                       <RiSubtractLine />
                     </button>
 
                     <input
                       type="text"
-                      value={1}
+                      value={quantity}
                       readOnly
                       className="w-14 border-none text-center outline-none"
                     />
 
-                    <button className="flex h-10 w-10 items-center justify-center border-l border-gray-300 transition hover:bg-gray-100">
+                    <button
+                      className="flex h-10 w-10 items-center justify-center border-l border-gray-300 transition hover:bg-gray-100"
+                      onClick={increaseQuantity}
+                    >
                       <RiAddLine />
                     </button>
                   </div>
@@ -137,8 +193,12 @@ const ProductDetails = () => {
             )}
 
             {/* Add to Cart */}
-            <button className="rounded-lg bg-black px-8 py-3 font-medium text-white transition hover:bg-gray-800">
-              Add to Cart
+            <button
+              className="rounded-lg bg-black px-8 py-3 font-medium text-white transition hover:bg-gray-800"
+              onClick={addToCart}
+              disabled={cartLoading}
+            >
+              {cartLoading ? "Adding to Cart" : "Add to Cart"}
             </button>
 
             {/* Review Form */}
@@ -174,14 +234,19 @@ const ProductDetails = () => {
           {product.reviews && product.reviews.length > 0 ? (
             <div className="space-y-4">
               {product.reviews.map((review) => (
-                <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div
+                  key={review._id}
+                  className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
+                >
                   <div className="mb-3">
                     <Rating value={review.rating} disabled={true} />
                   </div>
 
                   <p className="mb-2 text-gray-700">{review.comment}</p>
 
-                  <p className="text-sm font-medium text-gray-500">{review.name}</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    {review.name}
+                  </p>
                 </div>
               ))}
             </div>
