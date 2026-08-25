@@ -69,7 +69,7 @@ const CartItem = ({ item }) => {
 
   const handleRemove = () => {
     if (loading) return;
-    dispatch(removeItemFromCart({ productId: item.product, userId: user._id }));
+    dispatch(removeItemFromCart(item.product));
     toast.success("Item removed from your cart.", {
       position: "top-center",
       autoClose: 3000,

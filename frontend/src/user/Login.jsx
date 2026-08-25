@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login, removeErrors, removeSuccess } from "../features/user/userSlice";
 import { toast } from "react-toastify";
 
@@ -11,7 +11,9 @@ const Login = () => {
     (state) => state.user,
   );
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const redirect = new URLSearchParams(location.search).get("redirect") || "/";
 
   const loginSubmit = (e) => {
     e.preventDefault();
@@ -31,15 +33,18 @@ const Login = () => {
     }
   }, [dispatch, error]);
 
-  useEffect(()=>{
-    if(isAuthenticated){
-        navigate("/")
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(redirect);
     }
-  },[isAuthenticated])
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (success) {
-      toast.success("Login Successful", { position: "top-center", autoClose: 3000 });
+      toast.success("Login Successful", {
+        position: "top-center",
+        autoClose: 3000,
+      });
       dispatch(removeSuccess());
     }
   }, [dispatch, success]);

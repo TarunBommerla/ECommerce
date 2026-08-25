@@ -15,6 +15,8 @@ import UpdatePassword from "./user/UpdatePassword";
 import ForgotPassword from "./user/ForgotPassword";
 import ResetPassword from "./user/ResetPassword";
 import Cart from "./cart/Cart";
+import Shipping from "./cart/Shipping";
+import OrderConfirm from "./cart/OrderConfirm";
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -34,6 +36,9 @@ const App = () => {
         <Route path="/products/:keyword" element={<Products />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/password/forgot" element={<ForgotPassword />} />
+        <Route path="/reset/:token" element={<ResetPassword />} />
+        <Route path="/cart" element={<Cart />} />
         <Route
           path="/profile"
           element={<ProtectedRoute element={<Profile />} />}
@@ -46,9 +51,14 @@ const App = () => {
           path="/password/update"
           element={<ProtectedRoute element={<UpdatePassword />} />}
         />
-        <Route path="/password/forgot" element={<ForgotPassword />} />
-        <Route path="/reset/:token" element={<ResetPassword />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route
+          path="/shipping"
+          element={<ProtectedRoute element={<Shipping />} />}
+        />
+        <Route
+          path="/order/confirm"
+          element={<ProtectedRoute element={<OrderConfirm />} />}
+        />
       </Routes>
       {isAuthenticated && <UserDashBoard user={user} />}
     </div>

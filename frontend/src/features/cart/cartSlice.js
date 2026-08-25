@@ -4,7 +4,7 @@ import axios from "axios";
 // ADD ITEMS TO CART
 export const addItemsToCart = createAsyncThunk(
   "cart/addItemsToCart",
-  async ({ id, quantity }, { rejectWithValue, }) => {
+  async ({ id, quantity }, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(`/api/v1/product/${id}`);
 
@@ -31,6 +31,7 @@ const cartSlice = createSlice({
     success: false,
     message: null,
     removingId: null,
+    ShippingInfo: JSON.parse(localStorage.getItem("ShippingInfo")) || {},
   },
   reducers: {
     removeErrors: (state) => {
@@ -46,6 +47,10 @@ const cartSlice = createSlice({
         )));
       localStorage.setItem("Cart Items", JSON.stringify(state.cartItems));
       state.removingId = null;
+    },
+    saveShippingInfo: (state, action) => {
+      state.ShippingInfo = action.payload;
+      localStorage.setItem("ShippingInfo", JSON.stringify(state.ShippingInfo));
     },
   },
   extraReducers: (builder) => {
@@ -84,6 +89,10 @@ const cartSlice = createSlice({
   },
 });
 
-export const { removeErrors, removeMessage, removeItemFromCart } =
-  cartSlice.actions;
+export const {
+  removeErrors,
+  removeMessage,
+  removeItemFromCart,
+  saveShippingInfo,
+} = cartSlice.actions;
 export default cartSlice.reducer;
