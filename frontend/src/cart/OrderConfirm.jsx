@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import CheckoutPath from "./CheckoutPath";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const OrderConfirm = () => {
   const { ShippingInfo, cartItems } = useSelector((state) => state.cart);
@@ -14,6 +15,19 @@ const OrderConfirm = () => {
   );
   const tax = (subTotal * 0.09).toFixed(2);
   const shipping = subTotal > 500 ? 0 : 50;
+  const total = Number(subTotal) + Number(tax) + Number(shipping);
+  const navigate = useNavigate();
+
+  const proceedToPaymeny = () => {
+    const data = {
+      subTotal,
+      tax,
+      shipping,
+      total,
+    };
+    sessionStorage.setItem("OrderItem", JSON.stringify(data));
+    navigate("/process/payment");
+  };
 
   return (
     <>
@@ -133,11 +147,11 @@ const OrderConfirm = () => {
                 <tbody>
                   <tr className="border-t border-gray-200 text-sm font-semibold ">
                     <td className="px-6 py-4">₹{subTotal}</td>
-                    <td className="px-6 py-4">₹{shipping==0?"Free":shipping}</td>
-                    <td className="px-6 py-4">₹{tax}</td>
-                    <td className="px-6 py-4 text-green-600">
-                      ₹{Number(subTotal) + Number(tax) + Number(shipping)}
+                    <td className="px-6 py-4">
+                      ₹{shipping == 0 ? "Free" : shipping}
                     </td>
+                    <td className="px-6 py-4">₹{tax}</td>
+                    <td className="px-6 py-4 text-green-600">₹{total}</td>
                   </tr>
                 </tbody>
               </table>
@@ -145,7 +159,10 @@ const OrderConfirm = () => {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <button className="w-full max-w-md rounded-xl bg-black px-8 py-4 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-gray-800">
+            <button
+              className="w-full max-w-md rounded-xl bg-black px-8 py-4 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-gray-800 active:scale-95 cursor-pointer"
+              onClick={proceedToPaymeny}
+            >
               Proceed To Payment
             </button>
           </div>

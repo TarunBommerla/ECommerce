@@ -188,7 +188,7 @@ const Shipping = () => {
               </div>
 
               {/* Continue Button */}
-              <button className="w-full rounded-xl bg-black py-3 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-gray-800 active:scale-95">
+              <button className="w-full rounded-xl bg-black py-3 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-gray-800 active:scale-95 cursor-pointer">
                 Continue
               </button>
             </form>

@@ -183,11 +183,13 @@ export const resetPassword = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: null,
+    user: localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null,
     loading: false,
     error: null,
     success: false,
-    isAuthenticated: false,
+    isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
     message: null,
   },
 
@@ -217,6 +219,13 @@ const userSlice = createSlice({
         state.success = action.payload.success;
         state.user = action.payload.user || null;
         state.isAuthenticated = Boolean(action.payload?.user);
+
+        // Storing user data in localStorage
+        localStorage.setItem("user", JSON.stringify(state.user));
+        localStorage.setItem(
+          "isAuthenticated",
+          JSON.stringify(state.isAuthenticated),
+        );
       })
 
       // REGISTER FAILED
@@ -244,6 +253,13 @@ const userSlice = createSlice({
         state.success = action.payload.success;
         state.user = action.payload.user || null;
         state.isAuthenticated = Boolean(action.payload.user);
+
+        // Storing user data in localStorage
+        localStorage.setItem("user", JSON.stringify(state.user));
+        localStorage.setItem(
+          "isAuthenticated",
+          JSON.stringify(state.isAuthenticated),
+        );
       })
 
       // LOGIN FAILED
@@ -270,6 +286,13 @@ const userSlice = createSlice({
         state.error = null;
         state.user = action.payload.user || null;
         state.isAuthenticated = Boolean(action.payload.user);
+
+        // Storing user data in localStorage
+        localStorage.setItem("user", JSON.stringify(state.user));
+        localStorage.setItem(
+          "isAuthenticated",
+          JSON.stringify(state.isAuthenticated),
+        );
       })
 
       // LOADING USER FAILED
@@ -278,6 +301,13 @@ const userSlice = createSlice({
         state.error = action.payload?.message || "Failed to Load User Profile";
         state.user = null;
         state.isAuthenticated = false;
+
+        if (action.payload?.statusCode === 401) {
+          state.user = null;
+          state.isAuthenticated = false;
+          localStorage.removeItem("user");
+          localStorage.removeItem("isAuthenticated");
+        }
       });
 
     // ------------------------- LOGOUT CASES
@@ -294,6 +324,9 @@ const userSlice = createSlice({
         state.error = null;
         state.user = null;
         state.isAuthenticated = false;
+
+        localStorage.removeItem("user");
+        localStorage.removeItem("isAuthenticated");
       })
 
       // LOGOUT USER FAILED

@@ -139,7 +139,7 @@ const CartItem = ({ item }) => {
       {/* Actions */}
       <div className="flex items-center justify-center gap-3">
         <button
-          className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 active:scale-95"
+          className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 active:scale-95 cursor-pointer "
           onClick={handleUpdate}
           disabled={loading || quantity === item.quantity}
         >
@@ -147,7 +147,7 @@ const CartItem = ({ item }) => {
         </button>
 
         <button
-          className="active:scale-95 rounded-lg border border-red-500 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-50"
+          className="active:scale-95 cursor-pointer rounded-lg border border-red-500 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-50"
           disabled={loading}
           onClick={handleRemove}
         >

@@ -71,7 +71,7 @@ const Navbar = () => {
             </li>
 
             <li>
-              <Link to="/orders" className="transition hover:text-gray-300">
+              <Link to="/myOrders" className="transition hover:text-gray-300">
                 Orders
               </Link>
             </li>
