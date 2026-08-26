@@ -30,7 +30,7 @@ const ProductDetails = () => {
     cartItems,
   } = useSelector((state) => state.cart);
   console.log(cartItems);
-  
+
   const dispatch = useDispatch();
   const { id } = useParams();
   useEffect(() => {
@@ -105,6 +105,13 @@ const ProductDetails = () => {
   };
 
   const addToCart = () => {
+    if (product.stock <= 0) {
+      toast.error("Product is out of stock", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      return;
+    }
     dispatch(addItemsToCart({ id, quantity }));
   };
 
@@ -196,9 +203,13 @@ const ProductDetails = () => {
             <button
               className="rounded-lg bg-black px-8 py-3 font-medium text-white transition hover:bg-gray-800"
               onClick={addToCart}
-              disabled={cartLoading}
+              disabled={product.stock === 0 || cartLoading}
             >
-              {cartLoading ? "Adding to Cart" : "Add to Cart"}
+              {product.stock === 0
+                ? "Notify Me"
+                : cartLoading
+                  ? "Adding to Cart..."
+                  : "Add to Cart"}
             </button>
 
             {/* Review Form */}
