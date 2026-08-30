@@ -67,6 +67,36 @@ export const getProductDetails = createAsyncThunk(
 );
 
 // =====================================================
+// SUBMIT REVIEW
+// =====================================================
+// Fetches details of one specific product using product id
+export const createReview = createAsyncThunk(
+  "product/createReview",
+  async ({ rating, comment, productId }, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      // Sending GET request
+      const { data } = await axios.put(
+        "/api/v1/review",
+        { rating, comment, productId },
+        config,
+      );
+
+      // Returning product data
+      return data;
+    } catch (error) {
+      // Handling API errors
+      return rejectWithValue(error.response?.data || "An error occured");
+    }
+  },
+);
+
+// =====================================================
 // PRODUCT SLICE
 // =====================================================
 const productSlice = createSlice({
@@ -95,6 +125,8 @@ const productSlice = createSlice({
 
     // Total available pages for pagination
     totalPages: 0,
+    reviewSuccess: false,
+    reviewLoading: false,
   },
 
   // =====================================================
@@ -104,6 +136,9 @@ const productSlice = createSlice({
     // Clears previous errors
     removeErrors: (state) => {
       state.error = null;
+    },
+    removeSuccess: (state) => {
+      state.reviewSuccess = null;
     },
   },
 
@@ -149,7 +184,7 @@ const productSlice = createSlice({
       .addCase(getProduct.rejected, (state, action) => {
         // Stop loading
         state.loading = false;
-         // Store error message
+        // Store error message
         state.error = action.payload || "Something went wrong";
         // Clear products if request fails
         state.products = [];
@@ -159,7 +194,7 @@ const productSlice = createSlice({
     // GET SINGLE PRODUCT CASES
     // =====================================================
     builder
-    // When fetching single product starts
+      // When fetching single product starts
       .addCase(getProductDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -179,16 +214,38 @@ const productSlice = createSlice({
         state.product = action.payload.product;
       })
 
-       // When fetching single product fails
+      // When fetching single product fails
       .addCase(getProductDetails.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload || "Something went wrong";
+      });
+
+    // =====================================================
+    // REVIEW SUBMIT CASES
+    // =====================================================
+    builder
+      // When review submit starts
+      .addCase(createReview.pending, (state) => {
+        state.reviewLoading = true;
+        state.error = null;
+      })
+
+      // When review submit data received
+      .addCase(createReview.fulfilled, (state, action) => {
+        state.reviewLoading = false;
+        state.reviewSuccess = true;
+      })
+
+      // When review submit fails
+      .addCase(createReview.rejected, (state, action) => {
+        state.reviewLoading = false;
         state.error = action.payload || "Something went wrong";
       });
   },
 });
 
 // Export actions
-export const { removeErrors } = productSlice.actions;
+export const { removeErrors, removeSuccess } = productSlice.actions;
 
 // Export reducer to store
 export default productSlice.reducer;

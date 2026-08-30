@@ -7,8 +7,10 @@ import { RiAddLine, RiSubtractLine } from "@remixicon/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
+  createReview,
   getProductDetails,
   removeErrors,
+  removeSuccess,
 } from "../features/products/productSlice";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
@@ -16,12 +18,15 @@ import { addItemsToCart, removeMessage } from "../features/cart/cartSlice";
 
 const ProductDetails = () => {
   const [userRating, setUserRating] = useState(0);
+  const [comment, setComment] = useState("");
   const [quantity, setQuantity] = useState(1);
   const handleRatingChange = (newRating) => {
     setUserRating(newRating);
   };
 
-  const { loading, error, product } = useSelector((state) => state.product);
+  const { loading, error, product, reviewSuccess, reviewLoading } = useSelector(
+    (state) => state.product,
+  );
   const {
     loading: cartLoading,
     error: cartError,
@@ -60,26 +65,6 @@ const ProductDetails = () => {
     }
   }, [dispatch, success, message]);
 
-  if (loading) {
-    return (
-      <>
-        <Navbar />
-        <Loader />
-        <Footer />
-      </>
-    );
-  }
-
-  if (error || !product) {
-    return (
-      <>
-        <PageTitle title={"Product Details"} />
-        <Navbar />
-        <Footer />
-      </>
-    );
-  }
-
   const decreaseQuantity = () => {
     if (quantity <= 1) {
       toast.error("Quantity must be at least 1.", {
@@ -115,6 +100,56 @@ const ProductDetails = () => {
     dispatch(addItemsToCart({ id, quantity }));
   };
 
+  const handleReviewSubmit = (e) => {
+    e.preventDefault();
+    if (!userRating) {
+      toast.error("Please Select a Rating", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      return;
+    }
+    dispatch(
+      createReview({
+        rating: userRating,
+        comment,
+        productId: id,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    if (reviewSuccess) {
+      toast.success("Review Submitted", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      setUserRating(0);
+      setComment("");
+      dispatch(removeSuccess());
+      dispatch(getProductDetails(id));
+    }
+  }, [dispatch, reviewSuccess, id]);
+
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <Loader />
+        <Footer />
+      </>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <>
+        <PageTitle title={"Product Details"} />
+        <Navbar />
+        <Footer />
+      </>
+    );
+  }
   return (
     <>
       <PageTitle title={`${product.name} - Details`} />
@@ -205,15 +240,14 @@ const ProductDetails = () => {
               onClick={addToCart}
               disabled={product.stock === 0 || cartLoading}
             >
-              {product.stock === 0
-                ? "Notify Me"
-                : cartLoading
-                  ? "Adding to Cart..."
-                  : "Add to Cart"}
+              {cartLoading ? "Adding to Cart..." : "Add to Cart"}
             </button>
 
             {/* Review Form */}
-            <form className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <form
+              className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+              onSubmit={handleReviewSubmit}
+            >
               <h3 className="mb-4 text-xl font-semibold">Write a Review</h3>
 
               <div className="mb-4">
@@ -227,10 +261,14 @@ const ProductDetails = () => {
               <textarea
                 placeholder="Enter your review"
                 className="mb-4 h-32 w-full resize-none rounded-lg border border-gray-300 p-3 outline-none transition focus:border-black"
+                value={comment}
+                required
+                disabled={reviewLoading}
+                onChange={(e) => setComment(e.target.value)}
               ></textarea>
 
-              <button className="rounded-lg bg-black px-6 py-3 text-white transition hover:bg-gray-800">
-                Submit Review
+              <button className="rounded-lg bg-black px-6 py-3 text-white transition hover:bg-gray-800 active:scale-95 cursor-pointer">
+                {reviewLoading ? "Submitting..." : "Submit Review"}
               </button>
             </form>
           </div>
