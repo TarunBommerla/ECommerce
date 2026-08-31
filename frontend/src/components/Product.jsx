@@ -10,21 +10,19 @@ const Product = ({ product }) => {
   const handleRatingChange = (newRating) => {
     setRating(newRating);
   };
-
+  console.log(product);
+  console.log(product.images);
   return (
     // Entire card acts as a link to the product details page
     <Link to={`/product/${product._id}`} className="group block">
       {/* ================= Product Card Container ================= */}
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
         {/* ================= Product Image Section ================= */}
-        <div className="overflow-hidden bg-gray-100">
+        <div className="flex h-72 items-center justify-center overflow-hidden rounded-t-3xl bg-gray-50 p-4">
           <img
-            // Display first image from product images array
-            src={product.images[0].url}
-            // Alternative text for accessibility
+            src={product.images[0]?.url}
             alt={product.name}
-            // Product image styling and hover animation
-            className="h-75 w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="max-h-full rounded-xl max-w-full object-contain transition duration-300 hover:scale-105"
           />
         </div>
 

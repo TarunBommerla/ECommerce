@@ -20,6 +20,7 @@ const ProductDetails = () => {
   const [userRating, setUserRating] = useState(0);
   const [comment, setComment] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [selectedImage, setSelectedImage] = useState("");
   const handleRatingChange = (newRating) => {
     setUserRating(newRating);
   };
@@ -34,7 +35,6 @@ const ProductDetails = () => {
     message,
     cartItems,
   } = useSelector((state) => state.cart);
-  console.log(cartItems);
 
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -131,6 +131,12 @@ const ProductDetails = () => {
     }
   }, [dispatch, reviewSuccess, id]);
 
+  useEffect(() => {
+    if (product && product.images && product.images.length > 0) {
+      setSelectedImage(product.images[0].url);
+    }
+  }, [product]);
+
   if (loading) {
     return (
       <>
@@ -158,12 +164,32 @@ const ProductDetails = () => {
       <div className="mx-auto max-w-7xl px-4 py-10">
         <div className="grid gap-10 lg:grid-cols-2">
           {/* Product Image */}
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="flex min-h-150 flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white p-3 shadow-sm">
+            {/* Main Image */}
             <img
-              src={product.images[0].url.replace("./", "/")}
+              src={selectedImage}
               alt={product.name}
-              className="h-full w-full object-cover"
+              className="max-h-150 w-full object-contain transition duration-300"
             />
+
+            {/* Thumbnails */}
+            {product.images.length > 1 && (
+              <div className="mt-6 flex flex-wrap justify-center gap-3">
+                {product.images.map((img, index) => (
+                  <img
+                    key={index}
+                    src={img.url}
+                    alt={`Thumbnail ${index + 1}`}
+                    onClick={() => setSelectedImage(img.url)}
+                    className={`h-20 w-20 cursor-pointer rounded-xl border-2 object-cover p-1 transition-all duration-200 hover:scale-105 hover:border-black ${
+                      selectedImage === img.url
+                        ? "border-black shadow-md"
+                        : "border-gray-200"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Product Details */}

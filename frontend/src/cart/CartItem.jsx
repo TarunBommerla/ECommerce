@@ -84,7 +84,7 @@ const CartItem = ({ item }) => {
           <img
             src={item.image}
             alt={item.name}
-            className="h-30 w-25 object-cover transition duration-300 hover:scale-105 cursor-pointer rounded-md"
+            className="h-30 w-30 object-contain transition duration-300 hover:scale-105 cursor-pointer rounded-md"
           />
         </Link>
 

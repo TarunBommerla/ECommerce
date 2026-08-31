@@ -25,7 +25,7 @@ router
   .route("/admin/products")
   .get(verifyUserAuth, roleBasedAccess("admin"), getAdminProducts);
 
-// -------------------------PRODUCT CREATION
+// -------------------------ADMIN PRODUCT CREATION
 router
   .route("/admin/products/create")
   .post(verifyUserAuth, roleBasedAccess("admin"), createProducts);
