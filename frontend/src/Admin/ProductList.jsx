@@ -4,13 +4,20 @@ import PageTitle from "../components/PageTitle";
 import Footer from "../components/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchAdminProducts, removeErrors } from "../features/admin/adminSlice";
+import {
+  deleteProduct,
+  fetchAdminProducts,
+  removeErrors,
+  removeSuccess,
+} from "../features/admin/adminSlice";
 import { RiDeleteBinLine, RiPencilLine } from "@remixicon/react";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 
 const ProductList = () => {
-  const { products, loading, error } = useSelector((state) => state.admin);
+  const { products, loading, error, deleteLoading } = useSelector(
+    (state) => state.admin,
+  );
   const dispatch = useDispatch();
   console.log(products);
 
@@ -25,29 +32,59 @@ const ProductList = () => {
     }
   }, [dispatch, error]);
 
+  const handleDelete = (productId) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this product? This action cannot be undone.",
+    );
+
+    if (isConfirmed) {
+      dispatch(deleteProduct(productId))
+        .unwrap()
+        .then(() => {
+          toast.success("Product Deleted.", {
+            position: "top-center",
+            autoClose: 3000,
+          });
+          dispatch(removeSuccess());
+        })
+        .catch((error) => {
+          toast.error(error?.message || "Failed to delete product", {
+            position: "top-center",
+            autoClose: 3000,
+          });
+          dispatch(removeErrors());
+        });
+    }
+  };
+
   if (!products || products.length === 0) {
     return (
-      <div className="flex min-h-[70vh] flex-col items-center justify-center rounded-3xl border border-gray-200 bg-white p-10 text-center shadow-lg">
-        <h1 className="mb-4 text-3xl font-bold text-gray-900">
-          Admin Products
-        </h1>
-        <p className="mb-8 text-lg text-gray-500">No Products Found</p>
-        <p className="max-w-md text-sm text-gray-400">
-          There are currently no products available. Create a new product to
-          start managing your inventory.
-        </p>
-      </div>
+      <>
+      <Navbar/>
+      <PageTitle title="Admin | Products"/>
+        <div className="flex min-h-[70vh] flex-col items-center justify-center rounded-3xl border border-gray-200 bg-white p-10 text-center shadow-lg">
+          <h1 className="mb-4 text-3xl font-bold text-gray-900">
+            Admin Products
+          </h1>
+          <p className="mb-8 text-lg text-gray-500">No Products Found</p>
+          <p className="max-w-md text-sm text-gray-400">
+            There are currently no products available. Create a new product to
+            start managing your inventory.
+          </p>
+        </div>
+        <Footer/>
+      </>
     );
   }
 
   return (
     <>
-      {loading ? (
+      {loading || deleteLoading ? (
         <Loader />
       ) : (
         <>
           <Navbar />
-          <PageTitle title="Admin Products" />
+          <PageTitle title="Admin | Products" />
 
           <div className="min-h-screen bg-gray-50 px-4 py-8">
             <div className="mx-auto max-w-7xl">
@@ -148,14 +185,17 @@ const ProductList = () => {
                           <td className="px-4 py-4">
                             <div className="flex items-center justify-center gap-2">
                               <Link
-                                to={`/admin/products/${item._id}`}
-                                className="rounded-full bg-black p-4 text-sm font-medium text-white transition hover:bg-gray-800"
+                                to={`/admin/product/${item._id}`}
+                                className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 active:scale-95 cursor-pointer"
                               >
-                                <RiPencilLine size={18} />
+                                Edit
                               </Link>
 
-                              <button className="rounded-full bg-red-500 p-4 text-sm font-medium text-white transition hover:bg-red-600">
-                                <RiDeleteBinLine size={18} />
+                              <button
+                                className="active:scale-95 cursor-pointer rounded-lg border border-red-500 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-50"
+                                onClick={() => handleDelete(item._id)}
+                              >
+                                Delete
                               </button>
                             </div>
                           </td>

@@ -19,7 +19,7 @@ const DashBoard = () => {
   return (
     <>
       <Navbar />
-      <PageTitle title="Admin Dashboard" />
+      <PageTitle title="Admin | Dashboard" />
 
       <div className="min-h-screen bg-gray-50 px-8 py-10">
         <div className="mx-auto flex max-w-8xl gap-6">

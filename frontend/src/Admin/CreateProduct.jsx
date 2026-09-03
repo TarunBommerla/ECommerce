@@ -93,7 +93,7 @@ const CreateProduct = () => {
   return (
     <>
       <Navbar />
-      <PageTitle title="Create Product" />
+      <PageTitle title="Admin | Create Product" />
 
       <div className="min-h-screen bg-gray-50 px-4 py-10">
         <div className="mx-auto max-w-3xl">
@@ -147,11 +147,12 @@ const CreateProduct = () => {
               />
 
               {/* Description */}
-              <input
-                type="text"
-                placeholder="Enter Product Description"
+              <textarea
                 required
+                placeholder="Enter Product Description"
+                id="description"
                 name="description"
+                rows="4"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-black"
