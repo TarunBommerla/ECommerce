@@ -154,7 +154,7 @@ const OrderDetails = () => {
                   </th>
                   <td className="px-6 py-4">
                     <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">
-                      {paymentStatus}
+                      Cash on Delivery
                     </span>
                   </td>
                 </tr>

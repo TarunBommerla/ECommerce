@@ -105,7 +105,7 @@ export const updateOrderStatus = AsyncHandler(async (req, res, next) => {
 async function updateQuantity(id, quantity) {
   const product = await Product.findById(id);
   if (!product) {
-    throw new ApiError(404, "No Product Found");
+    throw new Error("Product not Foud");
   }
   product.stock -= quantity;
   await product.save({ validateBeforeSave: false });

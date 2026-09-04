@@ -41,6 +41,9 @@ router.route("/product/:id").get(getSingleProduct);
 
 // -------------------------PRODUCT REVIEW
 router.route("/review").put(verifyUserAuth, createReviewForProduct);
-router.route("/reviews").get(getProductReview).delete(verifyUserAuth, deleteReview);
+router
+  .route("/admin/reviews")
+  .get(verifyUserAuth, roleBasedAccess("admin"), getProductReview)
+  .delete(verifyUserAuth, roleBasedAccess("admin"), deleteReview);
 
 export default router;

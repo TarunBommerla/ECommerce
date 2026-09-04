@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 const images = [
-  "./images/banner_1.png",
-  "./images/banner_2.png",
-  "./images/banner_3.png",
+  "./images/ban_1.jpg",
+  "./images/ban_2.jpg",
+  "./images/ban_3.jpg",
 ];
 
 const ImageSlider = () => {
@@ -43,7 +43,7 @@ const ImageSlider = () => {
           {images.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentIndex(index)} key={index}
+              onClick={() => setCurrentIndex(index)}
               className={`h-3 w-3 rounded-full transition-all duration-300 ${
                 currentIndex === index
                   ? "bg-white scale-125"

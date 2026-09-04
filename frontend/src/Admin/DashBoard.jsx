@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../components/Navbar";
 import PageTitle from "../components/PageTitle";
 import {
@@ -14,8 +14,27 @@ import {
 } from "@remixicon/react";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAdminProducts,
+  fetchAllOrders,
+} from "../features/admin/adminSlice";
 
 const DashBoard = () => {
+  const { products, orders, totalAmount } = useSelector((state) => state.admin);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchAdminProducts());
+    dispatch(fetchAllOrders());
+  }, [dispatch]);
+  const totalProducts = products.length;
+  const totalOrders = orders.length;
+  const outOfStock = products.filter((product) => product.stock === 0).length;
+  const inStock = products.filter((product) => product.stock > 0).length;
+  const totalReviews = products.reduce(
+    (acc, product) => acc + (product.reviews.length || 0),
+    0,
+  );
   return (
     <>
       <Navbar />
@@ -112,7 +131,7 @@ const DashBoard = () => {
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
                   Total Products
                 </h3>
-                <p className="mt-3 text-3xl font-bold text-black">4</p>
+                <p className="mt-3 text-3xl font-bold text-black">{totalProducts}</p>
               </div>
 
               {/* Total Orders */}
@@ -121,7 +140,7 @@ const DashBoard = () => {
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
                   Total Orders
                 </h3>
-                <p className="mt-3 text-3xl font-bold text-black">4</p>
+                <p className="mt-3 text-3xl font-bold text-black">{totalOrders}</p>
               </div>
 
               {/* Total Reviews */}
@@ -130,7 +149,7 @@ const DashBoard = () => {
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
                   Total Reviews
                 </h3>
-                <p className="mt-3 text-3xl font-bold text-black">4</p>
+                <p className="mt-3 text-3xl font-bold text-black">{totalReviews}</p>
               </div>
 
               {/* Revenue */}
@@ -139,7 +158,7 @@ const DashBoard = () => {
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
                   Total Revenue
                 </h3>
-                <p className="mt-3 text-3xl font-bold text-black">₹4000</p>
+                <p className="mt-3 text-3xl font-bold text-black">₹{totalAmount}</p>
               </div>
 
               {/* Out of Stock */}
@@ -148,7 +167,7 @@ const DashBoard = () => {
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
                   Out Of Stock
                 </h3>
-                <p className="mt-3 text-3xl font-bold text-red-500">0</p>
+                <p className="mt-3 text-3xl font-bold text-red-500">{outOfStock}</p>
               </div>
 
               {/* In Stock */}
@@ -157,7 +176,7 @@ const DashBoard = () => {
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
                   In Stock
                 </h3>
-                <p className="mt-3 text-3xl font-bold text-green-500">3</p>
+                <p className="mt-3 text-3xl font-bold text-green-500">{inStock}</p>
               </div>
             </div>
           </div>

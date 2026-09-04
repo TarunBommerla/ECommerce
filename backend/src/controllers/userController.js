@@ -261,6 +261,9 @@ export const deleteUser = AsyncHandler(async (req, res, next) => {
   if (!user) {
     throw new ApiError(400, "No User Found");
   }
+  const imageId = user.avatar.public_id;
+  await cloudinary.uploader.destroy(imageId);
+
   await User.findByIdAndDelete(req.params.id);
   res.status(200).json({
     success: true,
