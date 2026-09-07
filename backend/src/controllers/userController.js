@@ -1,7 +1,7 @@
 import AsyncHandler from "../utils/AsyncHandler.js";
 import { User } from "../models/usersModel.js";
 import ApiError from "../utils/ApiError.js";
-import { sendToken } from "../utils/JWTToken.js";
+import { sendToken } from "../utils/jwtToken.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import crypto from "crypto";
 import { v2 as cloudinary } from "cloudinary";
