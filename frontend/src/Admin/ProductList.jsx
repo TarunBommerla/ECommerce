@@ -19,7 +19,6 @@ const ProductList = () => {
     (state) => state.admin,
   );
   const dispatch = useDispatch();
-  console.log(products);
 
   useEffect(() => {
     dispatch(fetchAdminProducts());

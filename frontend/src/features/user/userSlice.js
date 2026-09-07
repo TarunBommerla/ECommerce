@@ -11,7 +11,6 @@ export const register = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("Registration data:", data);
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -36,7 +35,6 @@ export const login = createAsyncThunk(
         { email, password },
         config,
       );
-      console.log("Login data", data);
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -168,7 +166,6 @@ export const resetPassword = createAsyncThunk(
         userData,
         config,
       );
-      console.log("Sending token:", token);
       return data;
     } catch (error) {
       return rejectWithValue(

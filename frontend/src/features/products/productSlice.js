@@ -30,7 +30,6 @@ export const getProduct = createAsyncThunk(
 
       // Sending GET request to backend
       const { data } = await axios.get(link);
-      console.log("respose", data);
 
       // Returning API response
       // This will be stored in action.payload
@@ -55,7 +54,6 @@ export const getProductDetails = createAsyncThunk(
 
       // Sending GET request
       const { data } = await axios.get(link);
-      console.log("respose", data);
 
       // Returning product data
       return data;
@@ -160,7 +158,6 @@ const productSlice = createSlice({
 
       // When products are successfully received
       .addCase(getProduct.fulfilled, (state, action) => {
-        console.log("Fullfilled action payload", action.payload);
         // Stop loading
         state.loading = false;
 
@@ -202,7 +199,6 @@ const productSlice = createSlice({
 
       // When single product data received
       .addCase(getProductDetails.fulfilled, (state, action) => {
-        console.log("Fullfilled action payload", action.payload);
 
         // Stop loading
         state.loading = false;

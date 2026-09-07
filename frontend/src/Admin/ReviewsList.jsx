@@ -29,8 +29,6 @@ const ReviewsList = () => {
     }
   }, [dispatch, error]);
 
-  console.log("yoyo", reviews);
-
   const handleReviewButton = (id) => {
     setSelectedProduct(id);
     dispatch(getAllReviews(id));

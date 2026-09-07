@@ -19,7 +19,6 @@ const OrderDetails = () => {
     }
   }, [dispatch, error, orderId]);
 
-  console.log(order);
   const {
     shippingInfo = {},
     orderItems = [],

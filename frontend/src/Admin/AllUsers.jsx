@@ -24,8 +24,6 @@ const AllUsers = () => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  console.log(users);
-
   useEffect(() => {
     if (error) {
       toast.error(error, { position: "top-center", autoClose: 3000 });

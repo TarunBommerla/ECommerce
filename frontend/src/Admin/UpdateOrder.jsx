@@ -25,7 +25,6 @@ const UpdateOrder = () => {
   } = useSelector((state) => state.admin);
   const loading = orderLoading || adminLoading;
   const dispatch = useDispatch();
-  console.log(order);
 
   useEffect(() => {
     if (id) {

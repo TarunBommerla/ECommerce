@@ -21,7 +21,6 @@ const ForgotPassword = () => {
     e.preventDefault();
     const myForm = new FormData();
     myForm.set("email", email);
-    console.log(email);
     dispatch(forgotPassword(myForm));
     setEmail("");
   };

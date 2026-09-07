@@ -10,8 +10,6 @@ const Product = ({ product }) => {
   const handleRatingChange = (newRating) => {
     setRating(newRating);
   };
-  console.log(product);
-  console.log(product.images);
   return (
     // Entire card acts as a link to the product details page
     <Link to={`/product/${product._id}`} className="group block">

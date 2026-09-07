@@ -48,11 +48,9 @@ const PaymentSuccess = () => {
           shippingPrice: OrderItem.shipping,
           totalPrice: OrderItem.total,
         };
-        console.log("Sending Data", orderData);
         dispatch(createOrder(orderData));
         sessionStorage.removeItem("OrderItem");
       } catch (error) {
-        console.log("create order Error: ", error.message);
         toast.error(error.message || "create order Error", {
           position: "top-center",
           autoClose: 3000,
