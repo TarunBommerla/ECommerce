@@ -83,15 +83,15 @@ const Products = () => {
           <PageTitle title="All Products" />
           <Navbar />
 
-          <div className="mx-auto max-w-8xl px-4 py-10 sm:px-6 lg:px-8">
-            <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
+          <div className="mx-auto w-full max-w-screen-2xl px-3 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+            <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
               {/* Categories Section */}
-              <aside className="h-fit rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+              <aside className="h-fit rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
                 <h3 className="mb-5 text-lg font-bold uppercase tracking-wider text-gray-900">
                   Categories
                 </h3>
 
-                <ul className="space-y-2">
+                <ul className="flex flex-wrap gap-2 lg:block lg:space-y-2">
                   {categories.map((category) => {
                     return (
                       <li
@@ -109,7 +109,7 @@ const Products = () => {
               {/* Products Section */}
               <section>
                 {/* Products Count / Heading */}
-                <div className="mb-6 flex items-center justify-between">
+                <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <h2 className="text-2xl font-bold text-gray-900">Products</h2>
 
                   {products?.length > 0 && (
@@ -121,7 +121,7 @@ const Products = () => {
 
                 {/* Products Grid */}
                 {Array.isArray(products) && products?.length > 0 ? (
-                  <div className="grid grid-cols-1 gap-6 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                     {products.map((product) => (
                       <Product key={product._id} product={product} />
                     ))}
@@ -131,7 +131,7 @@ const Products = () => {
                 )}
 
                 {/* Pagination */}
-                <div className=" flex justify-center">
+                <div className="mt-8 flex justify-center overflow-x-auto">
                   <Pagination
                     currentPage={currentPage}
                     onPageChange={handlePageChange}

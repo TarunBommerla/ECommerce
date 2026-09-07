@@ -62,13 +62,13 @@ const UserDashBoard = ({ user }) => {
     <>
       {/* Profile Header */}
       <div
-        className="fixed right-8 top-2 z-1000 flex cursor-pointer items-center px-4 py-2 transition-all duration-300 max-[1400px]:-right-2.5 max-[780px]:top-1 max-[780px]:right-0"
+        className="fixed top-2 right-2 z-1000 flex cursor-pointer items-center px-2 py-1 transition-all duration-300 sm:px-3 sm:py-1.5 md:px-4 md:py-2 max-[1920px]:right-2 max-[1440px]:right-2 max-[1280px]:right-2 max-[1024px]:right-4"
         onClick={toggleMenu}
       >
         <img
           src={user?.avatar?.url || "./images/profile.jpg"}
           alt="Profile Picture"
-          className="h-10 w-10 rounded-full border-2 border-gray-300 object-cover max-[780px]:h-10 max-[780px]:w-10"
+          className="h-8 w-8 rounded-full border-2 border-gray-300 object-cover"
         />
       </div>
 

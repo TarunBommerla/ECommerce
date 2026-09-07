@@ -41,17 +41,17 @@ const DashBoard = () => {
       <PageTitle title="Admin | Dashboard" />
 
       <div className="min-h-screen bg-gray-50 px-8 py-10">
-        <div className="mx-auto flex max-w-8xl gap-6">
+        <div className="mx-auto flex max-w-8xl flex-col gap-6 lg:flex-row">
           {/* Sidebar */}
-          <div className="w-72 rounded-3xl border border-gray-200 bg-white p-6 shadow-lg">
+          <div className="w-full rounded-3xl border border-gray-200 bg-white p-6 shadow-lg lg:w-72 lg:min-w-72">
             <div className="mb-8 flex items-center gap-3 border-b border-gray-200 pb-4 text-lg font-bold text-black">
               <RiDashboardLine className="text-2xl" />
               Admin Dashboard
             </div>
 
-            <nav className="space-y-8">
+            <nav className="space-y-6 lg:space-y-8">
               {/* Products */}
-              <div>
+              <div className="overflow-x-auto">
                 <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500">
                   Products
                 </h3>
@@ -76,7 +76,7 @@ const DashBoard = () => {
               </div>
 
               {/* Users */}
-              <div>
+              <div className="overflow-x-auto">
                 <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500">
                   Users
                 </h3>
@@ -91,7 +91,7 @@ const DashBoard = () => {
               </div>
 
               {/* Orders */}
-              <div>
+              <div className="overflow-x-auto">
                 <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500">
                   Orders
                 </h3>
@@ -106,7 +106,7 @@ const DashBoard = () => {
               </div>
 
               {/* Reviews */}
-              <div>
+              <div className="overflow-x-auto">
                 <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500">
                   Reviews
                 </h3>

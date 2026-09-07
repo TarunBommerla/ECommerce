@@ -31,6 +31,7 @@ import OrdersList from "./Admin/OrdersList";
 import UpdateOrder from "./Admin/UpdateOrder";
 import ReviewsList from "./Admin/ReviewsList";
 import ContactUs from "./pages/ContactUs";
+import About from "./pages/About";
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -54,6 +55,7 @@ const App = () => {
         <Route path="/reset/:token" element={<ResetPassword />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/About" element={<About />} />
 
         <Route
           path="/profile"

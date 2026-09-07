@@ -164,12 +164,12 @@ const ProductDetails = () => {
       <div className="mx-auto max-w-7xl px-4 py-10">
         <div className="grid gap-10 lg:grid-cols-2">
           {/* Product Image */}
-          <div className="flex min-h-150 flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white p-3 shadow-sm">
+          <div className="flex min-h-87.5 sm:min-h-125 lg:min-h-150 flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white p-3 shadow-sm">
             {/* Main Image */}
             <img
               src={selectedImage}
               alt={product.name}
-              className="max-h-150 w-full object-contain transition duration-300"
+              className="max-h-75 sm:max-h-112.5 lg:max-h-150 w-full object-contain transition duration-300"
             />
 
             {/* Thumbnails */}
@@ -194,13 +194,13 @@ const ProductDetails = () => {
 
           {/* Product Details */}
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-gray-900">{product.name}</h2>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">{product.name}</h2>
 
             <p className="leading-relaxed text-gray-600">
               {product.description}
             </p>
 
-            <p className="text-3xl font-bold text-black">
+            <p className="text-2xl sm:text-3xl font-bold text-black">
               Price: Rs. {product.price}
             </p>
 
@@ -231,10 +231,10 @@ const ProductDetails = () => {
             {/* Quantity */}
             {product.stock > 0 && (
               <>
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <span className="font-medium text-gray-700">Quantity</span>
 
-                  <div className="flex items-center overflow-hidden rounded-lg border border-gray-300">
+                  <div className="flex max-w-35 items-center overflow-hidden rounded-lg border border-gray-300">
                     <button
                       className="flex h-10 w-10 items-center justify-center border-r border-gray-300 transition hover:bg-gray-100"
                       onClick={decreaseQuantity}
@@ -262,7 +262,7 @@ const ProductDetails = () => {
 
             {/* Add to Cart */}
             <button
-              className="rounded-lg bg-black px-8 py-3 font-medium text-white transition hover:bg-gray-800"
+              className="w-full sm:w-auto rounded-lg bg-black px-8 py-3 font-medium text-white transition hover:bg-gray-800"
               onClick={addToCart}
               disabled={product.stock === 0 || cartLoading}
             >
@@ -271,10 +271,10 @@ const ProductDetails = () => {
 
             {/* Review Form */}
             <form
-              className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+              className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-5 shadow-sm"
               onSubmit={handleReviewSubmit}
             >
-              <h3 className="mb-4 text-xl font-semibold">Write a Review</h3>
+              <h3 className="mb-4 text-lg sm:text-xl font-semibold">Write a Review</h3>
 
               <div className="mb-4">
                 <Rating
@@ -302,7 +302,7 @@ const ProductDetails = () => {
 
         {/* Customer Reviews */}
         <div className="mt-16">
-          <h3 className="mb-6 text-2xl font-bold text-gray-900">
+          <h3 className="mb-6 text-xl sm:text-2xl font-bold text-gray-900">
             Customer Reviews
           </h3>
 

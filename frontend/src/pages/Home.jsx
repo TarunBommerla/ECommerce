@@ -37,9 +37,10 @@ const Home = () => {
           <PageTitle title="AXION - Home" />
           <Navbar />
           <ImageSlider />
-          <div className="max-w-8xl mx-auto px-6 md:px-10 lg:px-16 py-12">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-[0.2em] text-gray-900">
+
+          <div className="mx-auto max-w-8xl px-4 py-8 sm:px-6 sm:py-10 md:px-8 lg:px-12 xl:px-16">
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <h2 className="text-2xl font-bold uppercase tracking-[0.15em] text-gray-900 sm:text-3xl md:text-4xl md:tracking-[0.2em]">
                 Trending Now
               </h2>
 
@@ -50,12 +51,14 @@ const Home = () => {
                 View All
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
               {products.map((product, index) => {
                 return <Product key={index} product={product} />;
               })}
             </div>
           </div>
+
           <Footer />
         </>
       )}

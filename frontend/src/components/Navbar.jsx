@@ -39,13 +39,13 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-neutral-800 bg-black text-white">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-10">
+      <div className="mx-auto flex w-full max-w-8xl items-center justify-between gap-2 px-20 py-3 max-[1920px]:max-w-8xl max-[1440px]:max-w-8xl max-[1280px]:max-w-7xl max-[1024px]:max-w-7xl">
         {/* Logo */}
-        <div>
+        <div className="shrink-0">
           <Link
             to="/"
             onClick={() => setOpen(false)}
-            className="text-3xl font-black uppercase tracking-[0.35em]"
+            className="text-lg font-black uppercase tracking-[0.12em] sm:text-2xl sm:tracking-[0.28em] lg:text-3xl lg:tracking-[0.35em]"
           >
             AXION
           </Link>
@@ -53,7 +53,7 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden lg:block">
-          <ul className="flex items-center gap-8 text-sm uppercase tracking-[0.2em]">
+          <ul className="flex items-center gap-5 text-xs uppercase tracking-[0.14em] xl:gap-8 xl:text-sm xl:tracking-[0.2em]">
             <li>
               <Link
                 to="/"
@@ -85,39 +85,39 @@ const Navbar = () => {
         </div>
 
         {/* Right Section */}
-        <div className="flex items-center gap-4">
+        <div className="flex shrink-0 items-center gap-3">
           {/* Search */}
           <div className="relative hidden md:block">
             <form onSubmit={handleSearchSubmit}>
               <input
                 type="text"
                 placeholder="Search Products..."
-                className="w-56 rounded-full border border-neutral-700 bg-transparent py-2 pl-4 pr-11 text-sm outline-none transition focus:border-white"
+                className="w-40 rounded-full border border-neutral-700 bg-transparent py-2 pl-4 pr-10 text-xs outline-none transition focus:border-white lg:w-48 xl:w-56 xl:text-sm"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
 
               <button
                 type="submit"
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 xl:right-4"
               >
-                <RiSearchLine />
+                <RiSearchLine size={20} />
               </button>
             </form>
           </div>
 
           {/* Cart */}
-          <div>
+          <div className="shrink-0">
             <Link
               to="/cart"
               className="relative flex items-center justify-center"
             >
               <RiShoppingBagLine
-                size={24}
-                className="transition hover:text-gray-300"
+                size={22}
+                className="transition hover:text-gray-300 sm:size-6"
               />
 
-              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-white text-[10px] font-bold text-black">
+              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[9px] font-bold text-black sm:h-5 sm:w-5 sm:text-[10px]">
                 {cartItems.length}
               </span>
             </Link>
@@ -125,14 +125,17 @@ const Navbar = () => {
 
           {/* Register */}
           {!isAuthenticated && (
-            <Link to="/register" className="transition hover:text-gray-300">
-              <RiUserAddLine size={23} />
+            <Link
+              to="/register"
+              className="shrink-0 transition hover:text-gray-300"
+            >
+              <RiUserAddLine size={20} />
             </Link>
           )}
 
           {/* Mobile Menu Button */}
-          <button onClick={toggleMenu} className="lg:hidden">
-            {open ? <RiCloseLine size={28} /> : <RiMenuLine size={28} />}
+          <button onClick={toggleMenu} className="shrink-0 lg:hidden">
+            {open ? <RiCloseLine size={24} /> : <RiMenuLine size={24} />}
           </button>
         </div>
       </div>
@@ -143,9 +146,12 @@ const Navbar = () => {
           open ? "max-h-screen" : "max-h-0"
         }`}
       >
-        <div className="border-t border-neutral-800 px-5 py-6">
+        <div className="border-t border-neutral-800 px-4 py-5 sm:px-5 sm:py-6">
           {/* Mobile Search */}
-          <form onSubmit={handleSearchSubmit} className="relative mb-6">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="relative mb-5 md:hidden"
+          >
             <input
               type="text"
               placeholder="Search Products..."
@@ -163,7 +169,7 @@ const Navbar = () => {
           </form>
 
           {/* Mobile Links */}
-          <ul className="flex flex-col gap-5 text-sm uppercase tracking-[0.2em]">
+          <ul className="flex flex-col gap-4 text-sm uppercase tracking-[0.14em] sm:gap-5 sm:tracking-[0.2em]">
             <li>
               <Link to="/" onClick={() => setOpen(false)}>
                 Home
@@ -177,7 +183,7 @@ const Navbar = () => {
             </li>
 
             <li>
-              <Link to="/orders" onClick={() => setOpen(false)}>
+              <Link to="/myOrders" onClick={() => setOpen(false)}>
                 Orders
               </Link>
             </li>
@@ -188,27 +194,16 @@ const Navbar = () => {
               </Link>
             </li>
 
-            <li>
-              <Link
-                to="/cart"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3"
-              >
-                <RiShoppingBagLine size={20} />
-                Cart (6)
-              </Link>
-            </li>
-
             {!isAuthenticated && (
               <li>
-                <Link
-                  to="/register"
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-3"
-                >
-                  <RiUserAddLine size={20} />
-                  Register
-                </Link>
+                {!isAuthenticated && (
+                  <Link
+                    to="/register"
+                    className="hidden sm:block shrink-0 transition hover:text-gray-300"
+                  >
+                    <RiUserAddLine size={20} />
+                  </Link>
+                )}
               </li>
             )}
           </ul>

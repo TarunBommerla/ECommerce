@@ -9,6 +9,7 @@ import {
   RiMailLine,
   RiCopyrightLine,
 } from "@remixicon/react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -57,7 +58,7 @@ const Footer = () => {
             <div className="space-y-4 text-gray-400 text-sm">
               <p className="flex justify-center md:justify-start items-center gap-3">
                 <RiPhoneLine size={18} />
-                +91 79399 1218
+                +91 1234567890
               </p>
 
               <p className="flex justify-center md:justify-start items-center gap-3 break-all">
@@ -80,19 +81,15 @@ const Footer = () => {
 
             <ul className="space-y-3 text-sm text-gray-400">
               <li className="hover:text-white transition cursor-pointer">
-                New Arrivals
+                <Link to="/products">New Arrivals</Link>
               </li>
 
               <li className="hover:text-white transition cursor-pointer">
-                Men's Collection
+                <Link to="/contact">Contact</Link>
               </li>
 
               <li className="hover:text-white transition cursor-pointer">
-                Women's Collection
-              </li>
-
-              <li className="hover:text-white transition cursor-pointer">
-                About AXION
+                <Link to="/About">About AXION</Link>
               </li>
             </ul>
           </div>
