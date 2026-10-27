@@ -8,7 +8,7 @@ AXION is a full-stack e-commerce web application built using the **MERN stack**.
 
 **Live Website:** [Visit AXION](https://axion-m7rq.onrender.com/)
 
-> Replace the placeholder above with your actual deployed Render URL.
+> https://axion-m7rq.onrender.com/
 
 ## ✨ Features
 
